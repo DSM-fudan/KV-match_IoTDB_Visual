@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" th:href="@{/favicon.ico}">
+
+    <title>Result - HTSI</title>
+
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link th:href="@{/css/ie10-viewport-bug-workaround.css}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/offcanvas.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script th:src="@{/js/html5shiv.min.js}"></script>
+    <script th:src="@{/js/respond.min.js}"></script>
+    <![endif]-->
+</head>
+
+<body>
+<nav class="navbar navbar-fixed-top navbar-inverse">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" th:href="@{/}">HTSI</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li><a th:href="@{/}">Home</a></li>
+                <li><a th:href="@{/about}">About</a></li>
+                <li><a th:href="@{/contact}">Contact</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a class="param_status"></a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Settings <span class="caret"></span></a>
+                    <div class="dropdown-menu">
+                        <form id="form_param" class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Path</label>
+                                <div class="col-sm-9">
+                                    <select class="form-control" id="param_Path" name="param_path">
+                                        <option th:if="${'' == param_path}" value="" th:selected="${'' == param_path}">Please choose</option>
+                                        <option th:each="a_param_path : ${param_paths}" th:text="${a_param_path}" th:selected="${a_param_path == param_path}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!--<div class="form-group">-->
+                            <!--<label class="col-sm-3 control-label">Region</label>-->
+                            <!--<div class="col-sm-9">-->
+                            <!--<div class="btn-group" data-toggle="buttons">-->
+                            <!--<label class="btn btn-default" th:classappend="(${query_R} == 4) ? 'active'">-->
+                            <!--<input type="radio" name="param_R" id="param_R_4" value="4" autocomplete="off"> 4-->
+                            <!--</label>-->
+                            <!--<label class="btn btn-default" th:classappend="(${query_R} == 8) ? 'active'">-->
+                            <!--<input type="radio" name="param_R" id="param_R_8" value="8" autocomplete="off"> 8-->
+                            <!--</label>-->
+                            <!--<label class="btn btn-default" th:classappend="(${query_R} == 16) ? 'active'">-->
+                            <!--<input type="radio" name="param_R" id="param_R_16" value="16" autocomplete="off"> 16-->
+                            <!--</label>-->
+                            <!--<label class="btn btn-default" th:classappend="(${query_R} == 20) ? 'active'">-->
+                            <!--<input type="radio" name="param_R" id="param_R_20" value="20" autocomplete="off"> 20-->
+                            <!--</label>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="form-group">-->
+                            <!--<label class="col-sm-3 control-label">W<sub>u</sub></label>-->
+                            <!--<div class="col-sm-9">-->
+                            <!--<div class="btn-group" data-toggle="buttons">-->
+                            <!--<label class="btn btn-default" th:classappend="(${query_Wu} == 25) ? 'active'">-->
+                            <!--<input type="radio" name="param_Wu" id="param_Wu_25" value="25" autocomplete="off"> 25-->
+                            <!--</label>-->
+                            <!--<label class="btn btn-default" th:classappend="(${query_Wu} == 50) ? 'active'">-->
+                            <!--<input type="radio" name="param_Wu" id="param_Wu_50" value="50" autocomplete="off"> 50-->
+                            <!--</label>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Error</label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" name="param_Epsilon" id="param_Epsilon" placeholder="Distance threshold" th:value="${query_epsilon}">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </li>
+            </ul>
+        </div><!-- /.nav-collapse -->
+    </div><!-- /.container -->
+</nav><!-- /.navbar -->
+
+<div class="container">
+
+    <div class="row row-offcanvas row-offcanvas-right">
+
+        <div class="col-xs-12 col-sm-9">
+            <p class="pull-right visible-xs">
+                <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
+            </p>
+            <div class="alert alert-warning alert-dismissible" role="alert" th:if="${#lists.isEmpty(answers)}">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Warning!</strong> No subsequence of data matches the query series in specific distance.
+            </div>
+            <div class="row">
+                <div id="container"></div>
+            </div><!--/row-->
+        </div><!--/.col-xs-12.col-sm-9-->
+
+        <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
+            <div class="list-group">
+                <a class="list-group-item active">
+                    <h4 class="list-group-item-heading">Result</h4>
+                    <p class="list-group-item-text">
+                        Time: <span th:text="${timeUsage}"></span>s
+                    </p>
+                    <p class="list-group-item-text">
+                        Total: <span th:text="${cntAnswers}"></span>
+                    </p>
+                </a>
+                <div class="list-group-answer" th:classappend="(${unique && cntAnswers > #lists.size(answers)}) ? 'list-group-answer-unique'">
+                    <a class="list-group-item" th:if="${#lists.isEmpty(answers)}">
+                        No subsequence of data matches the query series in specific distance.
+                    </a>
+
+                    <a class="list-group-item" th:each="answer,iterationStatus : ${answers}"
+                       th:href="@{/result(token=${token},index=${iterationStatus.count-1},unique=${unique})}">
+                        <span class="badge">
+                            <span th:text="${#numbers.formatDecimal(answer.right, 1, 'COMMA', 2, 'POINT')}"></span>
+                        </span>
+                        #<span th:text="${iterationStatus.count}"></span> - <span th:text="${#dates.format(answer.left, 'yyyy-MM-dd H:mm:ss.SSS')}"></span>
+                    </a>
+                    <!--<a class="list-group-item" th:each="answer,iterationStatus : ${answers}"-->
+                       <!--href="javascript:void(0)" onclick="getDataAjax([[token]],[[iterationStatus.count-1]],[[unique]])">-->
+                        <!--<span class="badge">-->
+                            <!--<span th:text="${#numbers.formatDecimal(answer.right, 1, 'COMMA', 2, 'POINT')}"></span>-->
+                        <!--</span>-->
+                        <!--#<span th:text="${iterationStatus.count}"></span> - <span th:text="${answer.left}"></span>-->
+                    <!--</a>-->
+                </div>
+            </div>
+            <i th:if="${unique && cntAnswers > #lists.size(answers)}">In order to show you the most relevant results, we have omitted some entries very similar to the <span th:text="${#lists.size(answers)}"></span> already displayed. If you like, you can
+                <a th:href="@{/result(token=${token},unique=false)}"></a>
+                .</i>
+        </div><!--/.sidebar-offcanvas-->
+    </div><!--/row-->
+
+    <hr>
+
+    <footer>
+        <p>&copy; 2017 Jiaye Wu</p>
+    </footer>
+
+</div><!--/.container-->
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script th:src="@{/js/jquery.min.js}"></script>
+<script>window.jQuery || document.write('<script th:src="@{/js/jquery.min.js}"><\/script>')</script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script th:src="@{/js/ie10-viewport-bug-workaround.js}"></script>
+<script th:src="@{/js/offcanvas.js}"></script>
+<script th:src="@{/js/highcharts.js}"></script>
+<script th:src="@{/js/exporting.js}"></script>
+<script th:src="@{/js/query.js}"></script>
+<script th:inline="javascript" th:if="${not #lists.isEmpty(answers)}">
+    $(function () {
+        var dataList = [[${data.values}]];
+        var queryList = [[${query.values}]];
+        var realData = new Array();
+        for (i=0; i<dataList.length; i++) {
+//            var ts = new Date(theList[i].time);
+//            var b = ts.split("/\D+/");
+//            ts = new Date(Date.UTC(b[0], --b[1],b[2],b[3],b[4],b[5]));
+            var ts = dataList[i].time;
+//            ts = Date.UTC(ts.getUTCFullYear(),ts.getUTCMonth(),ts.getUTCDay(),
+//                ts.getUTCHours(),ts.getMinutes(),ts.getUTCSeconds(), ts.getUTCMilliseconds());
+            //console.log(ts);
+            var val = dataList[i].value;
+            var ar = new Array(ts, val);
+            realData.push(ar);
+        }
+        console.log(realData);
+        var realQuery = new Array();
+        for (i=0; i<queryList.length; i++) {
+            var ts = queryList[i].time;
+//            ts = Date.UTC(ts.getUTCFullYear(),ts.getUTCMonth(),ts.getUTCDay(),
+//                ts.getUTCHours(),ts.getMinutes(),ts.getUTCSeconds(), ts.getUTCMilliseconds());
+            var val = queryList[i].value;
+            var ar = new Array(ts, val);
+            realQuery.push(ar);
+        }
+        console.log(realQuery);
+
+        $('#container').highcharts({
+            chart: {
+                zoomType: 'xy',
+                height: 555,
+                marginTop: 80
+            },
+            title: {
+                text: 'Rank [[${index+1}]] - Position: [[${answers[index].left}]], Distance: [[${answers[index].right}]]'
+            },
+            subtitle: {
+                text: document.ontouchstart === undefined ?
+                    'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
+            },
+            xAxis: {
+                type: 'datetime',
+                dataTimeLabelFormats: {
+                    millisecond: '%H:%M:%S.%L',
+                    second: '%H:%M:%S',
+                    minute: '%H:%M',
+                    hour: '%H:%M',
+                    day: '%e. %b',
+                    week: '%e. %b',
+                    month: '%b \'%y',
+                    year: '%Y'
+                }
+            },
+            yAxis: {
+                title: {
+                    text: 'value'
+                }
+            },
+            tooltip: {
+                crosshairs: true,
+                shared: true
+            },
+            legend: {
+                enabled: true
+            },
+            plotOptions: {
+                area: {
+                    fillColor: {
+                        linearGradient: {
+                            x1: 0,
+                            y1: 0,
+                            x2: 0,
+                            y2: 1
+                        },
+                        stops: [
+                            [0, Highcharts.getOptions().colors[0]],
+                            [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                        ]
+                    },
+                    marker: {
+                        radius: 2
+                    },
+                    lineWidth: 1,
+                    states: {
+                        hover: {
+                            lineWidth: 1
+                        }
+                    },
+                    threshold: null
+                }
+            },
+            series: [{
+                name: 'Query series',
+                type: 'line',
+                pointStart: [[${answers[index].left}]],
+                zIndex: 1,
+                data: realQuery
+            },{
+                name: 'Data series',
+                type: 'line',
+                pointStart: [[${answers[index].left}]],
+                zIndex: 0,
+                data: realData
+            }]
+        });
+    });
+</script>
+<script th:inline="javascript" th:if="${#lists.isEmpty(answers)}">
+    $(function () {
+        $('#container').highcharts({
+            chart: {
+                zoomType: 'xy',
+                height: 555,
+                marginTop: 80
+            },
+            title: {
+                text: 'No result'
+            },
+            subtitle: {
+                text: document.ontouchstart === undefined ?
+                    'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
+            },
+            xAxis: {
+                type: 'linear',
+                minTickInterval: 1
+            },
+            yAxis: {
+                title: {
+                    text: 'value'
+                }
+            },
+            tooltip: {
+                crosshairs: true,
+                shared: true
+            },
+            legend: {
+                enabled: true
+            },
+            series: [{
+                name: 'Query series',
+                type: 'line',
+                pointStart: 1,
+                zIndex: 1,
+                data: [[${query}]]
+            }]
+        });
+    });
+</script>
+</body>
+</html>

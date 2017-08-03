@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" th:href="@{/favicon.ico}">
+
+    <title>About - HTSI</title>
+
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link th:href="@{/css/ie10-viewport-bug-workaround.css}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/offcanvas.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script th:src="@{/js/html5shiv.min.js}"></script>
+    <script th:src="@{/js/respond.min.js}"></script>
+    <![endif]-->
+</head>
+
+<body>
+<nav class="navbar navbar-fixed-top navbar-inverse">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" th:href="@{/}">HTSI</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li><a th:href="@{/}">Home</a></li>
+                <li class="active"><a th:href="@{/about}">About</a></li>
+                <li><a th:href="@{/contact}">Contact</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a class="param_status"></a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Settings <span class="caret"></span></a>
+                    <div class="dropdown-menu">
+                        <form id="form_param" class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Data length</label>
+                                <div class="col-sm-9">
+                                    <div class="btn-group" data-toggle="buttons">
+                                        <label class="btn btn-default" th:classappend="(${query_N} == 10000000) ? 'active'">
+                                            <input type="radio" name="param_N" id="param_N_7" value="10000000" autocomplete="off"> 10<sup>7</sup>
+                                        </label>
+                                        <label class="btn btn-default" th:classappend="(${query_N} == 100000000) ? 'active'">
+                                            <input type="radio" name="param_N" id="param_N_8" value="100000000" autocomplete="off"> 10<sup>8</sup>
+                                        </label>
+                                        <label class="btn btn-default" th:classappend="(${query_N} == 1000000000) ? 'active'">
+                                            <input type="radio" name="param_N" id="param_N_9" value="1000000000" autocomplete="off"> 10<sup>9</sup>
+                                        </label>
+                                        <label class="btn btn-default" th:classappend="(${query_N} == 10000000000) ? 'active'">
+                                            <input type="radio" name="param_N" id="param_N_6" value="10000000000" autocomplete="off"> 10<sup>10</sup>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--<div class="form-group">-->
+                            <!--<label class="col-sm-3 control-label">Region</label>-->
+                            <!--<div class="col-sm-9">-->
+                            <!--<div class="btn-group" data-toggle="buttons">-->
+                            <!--<label class="btn btn-default" th:classappend="(${query_R} == 4) ? 'active'">-->
+                            <!--<input type="radio" name="param_R" id="param_R_4" value="4" autocomplete="off"> 4-->
+                            <!--</label>-->
+                            <!--<label class="btn btn-default" th:classappend="(${query_R} == 8) ? 'active'">-->
+                            <!--<input type="radio" name="param_R" id="param_R_8" value="8" autocomplete="off"> 8-->
+                            <!--</label>-->
+                            <!--<label class="btn btn-default" th:classappend="(${query_R} == 16) ? 'active'">-->
+                            <!--<input type="radio" name="param_R" id="param_R_16" value="16" autocomplete="off"> 16-->
+                            <!--</label>-->
+                            <!--<label class="btn btn-default" th:classappend="(${query_R} == 20) ? 'active'">-->
+                            <!--<input type="radio" name="param_R" id="param_R_20" value="20" autocomplete="off"> 20-->
+                            <!--</label>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="form-group">-->
+                            <!--<label class="col-sm-3 control-label">W<sub>u</sub></label>-->
+                            <!--<div class="col-sm-9">-->
+                            <!--<div class="btn-group" data-toggle="buttons">-->
+                            <!--<label class="btn btn-default" th:classappend="(${query_Wu} == 25) ? 'active'">-->
+                            <!--<input type="radio" name="param_Wu" id="param_Wu_25" value="25" autocomplete="off"> 25-->
+                            <!--</label>-->
+                            <!--<label class="btn btn-default" th:classappend="(${query_Wu} == 50) ? 'active'">-->
+                            <!--<input type="radio" name="param_Wu" id="param_Wu_50" value="50" autocomplete="off"> 50-->
+                            <!--</label>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Error</label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" name="param_Epsilon" id="param_Epsilon" placeholder="Distance threshold" th:value="${query_epsilon}">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </li>
+            </ul>
+        </div><!-- /.nav-collapse -->
+    </div><!-- /.container -->
+</nav><!-- /.navbar -->
+
+<div class="container">
+
+    <div class="row row-offcanvas row-offcanvas-right">
+
+        <div class="col-xs-12 col-sm-9">
+            <p class="pull-right visible-xs">
+                <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
+            </p>
+            <div class="jumbotron">
+                <h1>HBase Time Series Index</h1>
+                <p>This is a system to show the potential of the HBase Time Series Index system. Try some query series to see the performance.</p>
+            </div>
+            <div class="row">
+                <div class="col-xs-6 col-lg-4">
+                    <h2>Introduction</h2>
+                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+                    <p><a class="btn btn-default" th:href="@{/about#introduction}" role="button">View details &raquo;</a></p>
+                </div><!--/.col-xs-6.col-lg-4-->
+                <div class="col-xs-6 col-lg-4">
+                    <h2>Related works</h2>
+                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+                    <p><a class="btn btn-default" th:href="@{/about#related_works}" role="button">View details &raquo;</a></p>
+                </div><!--/.col-xs-6.col-lg-4-->
+                <div class="col-xs-6 col-lg-4">
+                    <h2>Preliminary</h2>
+                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+                    <p><a class="btn btn-default" th:href="@{/about#preliminary}" role="button">View details &raquo;</a></p>
+                </div><!--/.col-xs-6.col-lg-4-->
+                <div class="col-xs-6 col-lg-4">
+                    <h2>Build index</h2>
+                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+                    <p><a class="btn btn-default" th:href="@{/about#build_index}" role="button">View details &raquo;</a></p>
+                </div><!--/.col-xs-6.col-lg-4-->
+                <div class="col-xs-6 col-lg-4">
+                    <h2>Query</h2>
+                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+                    <p><a class="btn btn-default" th:href="@{/about#query}" role="button">View details &raquo;</a></p>
+                </div><!--/.col-xs-6.col-lg-4-->
+                <div class="col-xs-6 col-lg-4">
+                    <h2>Experiments</h2>
+                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+                    <p><a class="btn btn-default" th:href="@{/about#experiments}" role="button">View details &raquo;</a></p>
+                </div><!--/.col-xs-6.col-lg-4-->
+            </div><!--/row-->
+        </div><!--/.col-xs-12.col-sm-9-->
+
+        <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
+            <div class="list-group">
+                <a class="list-group-item active">About</a>
+                <a href="#" class="list-group-item">Introduction</a>
+                <a href="#" class="list-group-item">Related works</a>
+                <a href="#" class="list-group-item">Preliminary</a>
+                <a href="#" class="list-group-item">Build index</a>
+                <a href="#" class="list-group-item">Query</a>
+                <a href="#" class="list-group-item">Experiments</a>
+            </div>
+        </div><!--/.sidebar-offcanvas-->
+    </div><!--/row-->
+
+    <hr>
+
+    <footer>
+        <p>&copy; 2016 Jiaye Wu</p>
+    </footer>
+
+</div><!--/.container-->
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script th:src="@{/js/jquery.min.js}"></script>
+<script>window.jQuery || document.write('<script th:src="@{/js/jquery.min.js}"><\/script>')</script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script th:src="@{/js/ie10-viewport-bug-workaround.js}"></script>
+<script th:src="@{/js/offcanvas.js}"></script>
+<script th:src="@{/js/query.js}"></script>
+</body>
+</html>
