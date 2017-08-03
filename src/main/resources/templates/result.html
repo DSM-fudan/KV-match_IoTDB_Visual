@@ -55,48 +55,16 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Path</label>
                                 <div class="col-sm-9">
-                                    <select class="form-control" id="param_Path" name="param_path">
+                                    <select class="form-control" id="param_Path" name="param_path" disabled="disabled">
                                         <option th:if="${'' == param_path}" value="" th:selected="${'' == param_path}">Please choose</option>
                                         <option th:each="a_param_path : ${param_paths}" th:text="${a_param_path}" th:selected="${a_param_path == param_path}"></option>
                                     </select>
                                 </div>
                             </div>
-                            <!--<div class="form-group">-->
-                            <!--<label class="col-sm-3 control-label">Region</label>-->
-                            <!--<div class="col-sm-9">-->
-                            <!--<div class="btn-group" data-toggle="buttons">-->
-                            <!--<label class="btn btn-default" th:classappend="(${query_R} == 4) ? 'active'">-->
-                            <!--<input type="radio" name="param_R" id="param_R_4" value="4" autocomplete="off"> 4-->
-                            <!--</label>-->
-                            <!--<label class="btn btn-default" th:classappend="(${query_R} == 8) ? 'active'">-->
-                            <!--<input type="radio" name="param_R" id="param_R_8" value="8" autocomplete="off"> 8-->
-                            <!--</label>-->
-                            <!--<label class="btn btn-default" th:classappend="(${query_R} == 16) ? 'active'">-->
-                            <!--<input type="radio" name="param_R" id="param_R_16" value="16" autocomplete="off"> 16-->
-                            <!--</label>-->
-                            <!--<label class="btn btn-default" th:classappend="(${query_R} == 20) ? 'active'">-->
-                            <!--<input type="radio" name="param_R" id="param_R_20" value="20" autocomplete="off"> 20-->
-                            <!--</label>-->
-                            <!--</div>-->
-                            <!--</div>-->
-                            <!--</div>-->
-                            <!--<div class="form-group">-->
-                            <!--<label class="col-sm-3 control-label">W<sub>u</sub></label>-->
-                            <!--<div class="col-sm-9">-->
-                            <!--<div class="btn-group" data-toggle="buttons">-->
-                            <!--<label class="btn btn-default" th:classappend="(${query_Wu} == 25) ? 'active'">-->
-                            <!--<input type="radio" name="param_Wu" id="param_Wu_25" value="25" autocomplete="off"> 25-->
-                            <!--</label>-->
-                            <!--<label class="btn btn-default" th:classappend="(${query_Wu} == 50) ? 'active'">-->
-                            <!--<input type="radio" name="param_Wu" id="param_Wu_50" value="50" autocomplete="off"> 50-->
-                            <!--</label>-->
-                            <!--</div>-->
-                            <!--</div>-->
-                            <!--</div>-->
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Error</label>
                                 <div class="col-sm-9">
-                                    <input type="number" class="form-control" name="param_Epsilon" id="param_Epsilon" placeholder="Distance threshold" th:value="${query_epsilon}">
+                                    <input  disabled="disabled" type="number" class="form-control" name="param_epsilon" id="param_Epsilon" placeholder="Distance threshold" th:value="${param_epsilon}">
                                 </div>
                             </div>
                         </form>
@@ -156,9 +124,10 @@
                     <!--</a>-->
                 </div>
             </div>
-            <i th:if="${unique && cntAnswers > #lists.size(answers)}">In order to show you the most relevant results, we have omitted some entries very similar to the <span th:text="${#lists.size(answers)}"></span> already displayed. If you like, you can
-                <a th:href="@{/result(token=${token},unique=false)}"></a>
-                .</i>
+            <i th:if="${unique && cntAnswers > #lists.size(answers)}"> In order to show you the most relevant results, we have omitted some entries very similar to the
+                <span th:text="${#lists.size(answers)}"></span> already displayed. If you like, you can
+                <a th:href="@{/result(token=${token},unique=false)}">view the omitted results</a>.</i>
+
         </div><!--/.sidebar-offcanvas-->
     </div><!--/row-->
 
@@ -188,28 +157,23 @@
         var queryList = [[${query.values}]];
         var realData = new Array();
         for (i=0; i<dataList.length; i++) {
-//            var ts = new Date(theList[i].time);
-//            var b = ts.split("/\D+/");
-//            ts = new Date(Date.UTC(b[0], --b[1],b[2],b[3],b[4],b[5]));
             var ts = dataList[i].time;
-//            ts = Date.UTC(ts.getUTCFullYear(),ts.getUTCMonth(),ts.getUTCDay(),
-//                ts.getUTCHours(),ts.getMinutes(),ts.getUTCSeconds(), ts.getUTCMilliseconds());
-            //console.log(ts);
             var val = dataList[i].value;
             var ar = new Array(ts, val);
             realData.push(ar);
         }
-        console.log(realData);
+//        console.log(realData);
         var realQuery = new Array();
         for (i=0; i<queryList.length; i++) {
             var ts = queryList[i].time;
-//            ts = Date.UTC(ts.getUTCFullYear(),ts.getUTCMonth(),ts.getUTCDay(),
-//                ts.getUTCHours(),ts.getMinutes(),ts.getUTCSeconds(), ts.getUTCMilliseconds());
             var val = queryList[i].value;
             var ar = new Array(ts, val);
             realQuery.push(ar);
         }
-        console.log(realQuery);
+//        console.log(realQuery);
+        var startTime = new Date([[${answers[index].left}]]);
+        startTime = js_format_date(startTime);
+        var roundDistance = Number(([[${answers[index].right}]]).toFixed(2));
 
         $('#container').highcharts({
             chart: {
@@ -218,7 +182,8 @@
                 marginTop: 80
             },
             title: {
-                text: 'Rank [[${index+1}]] - Position: [[${answers[index].left}]], Distance: [[${answers[index].right}]]'
+                text: 'Rank [[${index+1}]] - Start Time: ' + startTime +
+                ', Distance: ' + roundDistance
             },
             subtitle: {
                 text: document.ontouchstart === undefined ?
@@ -292,6 +257,14 @@
     });
 </script>
 <script th:inline="javascript" th:if="${#lists.isEmpty(answers)}">
+    var realQuery = new Array();
+    for (i=0; i<queryList.length; i++) {
+        var ts = queryList[i].time;
+        var val = queryList[i].value;
+        var ar = new Array(ts, val);
+        realQuery.push(ar);
+    }
+
     $(function () {
         $('#container').highcharts({
             chart: {
@@ -307,8 +280,17 @@
                     'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
             },
             xAxis: {
-                type: 'linear',
-                minTickInterval: 1
+                type: 'datetime',
+                dataTimeLabelFormats: {
+                    millisecond: '%H:%M:%S.%L',
+                    second: '%H:%M:%S',
+                    minute: '%H:%M',
+                    hour: '%H:%M',
+                    day: '%e. %b',
+                    week: '%e. %b',
+                    month: '%b \'%y',
+                    year: '%Y'
+                }
             },
             yAxis: {
                 title: {
@@ -327,7 +309,7 @@
                 type: 'line',
                 pointStart: 1,
                 zIndex: 1,
-                data: [[${query}]]
+                data: realQuery
             }]
         });
     });

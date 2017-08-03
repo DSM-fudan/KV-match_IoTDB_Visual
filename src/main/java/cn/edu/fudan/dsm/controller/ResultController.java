@@ -31,7 +31,7 @@ public class ResultController {
     @RequestMapping("/result")
     public ModelAndView result(@RequestParam String token, @RequestParam(defaultValue = "0") Integer index, @RequestParam(defaultValue = "true") Boolean unique, HttpServletRequest request) throws IOException {
         // get stored query information
-//        Integer Wu = (Integer) request.getSession().getAttribute(token + "-Wu");
+        List<String> param_paths = (List<String>) request.getSession().getAttribute("param_paths");
         String path = (String) request.getSession().getAttribute(token + "-path");
         String Q_path = (String) request.getSession().getAttribute(token + "-Q_path");
         Double epsilon = (Double) request.getSession().getAttribute(token + "-epsilon");
@@ -39,7 +39,6 @@ public class ResultController {
         Long endTime = (Long) request.getSession().getAttribute(token + "-endOffset");
         Long length = endTime - startTime;
 
-        Integer cntCandidates = (Integer) request.getSession().getAttribute(token + "-cntCandidates");
         List<Pair<Long, Double>> answers = (List<Pair<Long, Double>>) request.getSession().getAttribute(token + "-answers");
         Double timeUsage = (Double) request.getSession().getAttribute(token + "-timeUsage");
 
@@ -50,7 +49,6 @@ public class ResultController {
             mav.setViewName("redirect:/");
             return mav;
         } else if (!answers.isEmpty()) {
-            mav.addObject("cntAnswers", answers.size());
             if (unique) {
                 List<Pair<Long, Double>> uniqueAnswers = new ArrayList<>();
                 int ansCnt = Math.min(answers.size(), MAX_RESULTS_DISPLAY);
@@ -68,7 +66,9 @@ public class ResultController {
                     }
                 }
                 answers = uniqueAnswers;
+                mav.addObject("cntAnswers", answers.size());
             } else {
+                mav.addObject("cntAnswers", answers.size());
                 if (answers.size() > MAX_RESULTS_DISPLAY) {
                     answers = answers.subList(0, MAX_RESULTS_DISPLAY);
                 }
@@ -76,12 +76,13 @@ public class ResultController {
             List<TimeValue> data = queryService.getSeriesSimilar(new Path(path), answers.get(index).left, answers.get(index).left + length);
             mav.addObject("data", new Series(data));
             List<TimeValue> query = queryService.getSeriesSimilar(new Path(path), startTime, endTime);
+            query = alignQandX(query, data);
             mav.addObject("query", new Series(query));
         } else {
             mav.addObject("cntAnswers", 0);
         }
 
-        mav.addObject("cntCandidates", cntCandidates);
+        mav.addObject("param_paths", param_paths);
         mav.addObject("answers", answers);
         mav.addObject("timeUsage", timeUsage);
 //        mav.addObject("indexTimeUsage", indexTimeUsage);
@@ -96,6 +97,23 @@ public class ResultController {
         mav.addObject("index", index);
         mav.addObject("unique", unique);
         return mav;
+    }
+
+    // make query and data align in highcharts
+    private List<TimeValue> alignQandX(List<TimeValue> query, List<TimeValue> data) {
+        if (query != null && !query.isEmpty() && data != null && !data.isEmpty()) {
+            List<TimeValue> q = new ArrayList<>();
+            long qt = query.get(0).getTime();
+            long dt = data.get(0).getTime();
+            long abs = qt - dt;
+            for (TimeValue qtv : query) {
+                qtv.setTime(qtv.getTime() - abs);
+                q.add(qtv);
+            }
+            return q;
+        } else {
+            return query;
+        }
     }
 
 }

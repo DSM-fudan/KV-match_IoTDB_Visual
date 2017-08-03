@@ -184,90 +184,13 @@ function paramAjax(param, type, value) {
     });
 }
 
-// function getDataAjax(token, index, unique) {
-//     $.ajax({
-//         type: "POST",
-//         url: "/getDataByIndex",
-//         data: '{"token":"' + token + '","index":"' + index + '","unique":"' + unique + '"}',
-//         datatype: "json",
-//         success: function (data) {
-//             $('#container').highcharts({
-//                 chart: {
-//                     zoomType: 'xy',
-//                     height: 555,
-//                     marginTop: 80
-//                 },
-//                 title: {
-//                     text: 'Rank [[${index+1}]] - Position: [[${answers[index].left}]], Distance: [[${answers[index].right}]]'
-//                 },
-//                 subtitle: {
-//                     text: document.ontouchstart === undefined ?
-//                         'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
-//                 },
-//                 xAxis: {
-//                     type: 'datatime',
-//                     dataTimeLabelFormats: {
-//                         month: '%e.%b',
-//                     }
-// //                minTickInterval: 1
-//                 },
-//                 yAxis: {
-//                     title: {
-//                         text: 'value'
-//                     }
-//                 },
-//                 tooltip: {
-//                     crosshairs: true,
-//                     shared: true
-//                 },
-//                 legend: {
-//                     enabled: true
-//                 },
-//                 plotOptions: {
-//                     area: {
-//                         fillColor: {
-//                             linearGradient: {
-//                                 x1: 0,
-//                                 y1: 0,
-//                                 x2: 0,
-//                                 y2: 1
-//                             },
-//                             stops: [
-//                                 [0, Highcharts.getOptions().colors[0]],
-//                                 [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
-//                             ]
-//                         },
-//                         marker: {
-//                             radius: 2
-//                         },
-//                         lineWidth: 1,
-//                         states: {
-//                             hover: {
-//                                 lineWidth: 1
-//                             }
-//                         },
-//                         threshold: null
-//                     }
-//                 },
-//                 series: [{
-//                     name: 'Query series',
-//                     type: 'line',
-//                     pointStart: [[${answers[index].left}]],
-//                     zIndex: 1,
-//                     data: [[${query}]]
-//                 },{
-//                     name: 'Data series',
-//                     type: 'line',
-//                     pointStart: [[${answers[index].left}]],
-//                     zIndex: 0,
-//                     data: [[${data}]]
-//                 }]
-//             });
-//
-//
-//         },
-//         error: function () {
-//             alert("WHY");
-//         }
-//     });
-// }
+function js_format_date(date) {
+    year = "" + date.getFullYear();
+    month = "" + (date.getMonth() + 1); if (month.length == 1) { month = "0" + month; }
+    day = "" + date.getDate(); if (day.length == 1) { day = "0" + day; }
+    hour = "" + date.getHours(); if (hour.length == 1) { hour = "0" + hour; }
+    minute = "" + date.getMinutes(); if (minute.length == 1) { minute = "0" + minute; }
+    second = "" + date.getSeconds(); if (second.length == 1) { second = "0" + second; }
+    millisecond = "" + date.getMilliseconds(); if (millisecond.length == 1) { millisecond = "0" + millisecond; }
+    return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second + "." + millisecond;
+}

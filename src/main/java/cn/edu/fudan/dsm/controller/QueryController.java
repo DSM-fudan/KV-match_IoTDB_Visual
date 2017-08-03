@@ -45,7 +45,7 @@ public class QueryController {
         long clockStartTime = System.currentTimeMillis();
         Pair<Integer, List<Pair<Long, Double>>> result = queryService.query(queryRequest); // 起始时间，距离
         long clockEndTime = System.currentTimeMillis();
-        logger.info("Candidates: {}, Answer: {}, Time usage: {} ms", result.left, result.right.size(), clockEndTime - clockStartTime);
+        logger.info("Answer: {}, Time usage: {} ms", result.left, clockEndTime - clockStartTime);
         if (!result.right.isEmpty()) {
             logger.info("Best: {}, Distance: {}", result.right.get(0).left, result.right.get(0).right);
         }
@@ -66,10 +66,6 @@ public class QueryController {
     private long convertStringToLong(String offset) throws ParseException {
         Date d = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(offset);
         return d.getTime();
-    }
-
-    private Pair<Integer,List<Pair<Long,Double>>> processGenerate() {
-        return null;
     }
 
     @RequestMapping(value = "/queryDraw", method = RequestMethod.POST)
