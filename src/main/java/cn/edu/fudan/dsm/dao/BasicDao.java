@@ -2,9 +2,9 @@ package cn.edu.fudan.dsm.dao;
 
 import cn.edu.fudan.dsm.common.SimilarityResult;
 import cn.edu.fudan.dsm.common.TimeValue;
+import cn.edu.thu.tsfile.common.utils.Pair;
 import cn.edu.thu.tsfile.timeseries.read.qp.Path;
 import cn.edu.thu.tsfiledb.index.kvmatch.KvMatchQueryRequest;
-import cn.edu.thu.tsfile.common.utils.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,11 @@ public class BasicDao {
     private static final Logger logger = LoggerFactory.getLogger(BasicDao.class);
 
     private static final String SELECT_MATCHING_SQL = "select index subsequence_matching(%s, %s, %s, %s, %s, %s, %s)"; // X, Q startTime endTime epsilon alpha beta
-    private static final String SELECT_MATCHING_SERIES_SQL = "select * from %s where time >= %s and time <= %s";
+    private static final String SELECT_SERIES_SQL = "select * from %s where time >= %s and time <= %s";
+    private static final String CREATE_TEMP_SERIES_SQL = "create timeseries %s with datatype=DOUBLE,encoding=RLE"; //path + suffix
+    private static final String DELETE_TEMP_SERIES_SQL = "delete timeseries %s";
+    private static final String INSERT_TEMP_SERIES_SQL = "insert into %s(timestamp,%s) values (%s,%s)"; //device sensor time value
+    private static final String suffix = "_tmp_index";
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -56,6 +60,10 @@ public class BasicDao {
     }
 
     public List<SimilarityResult> query(KvMatchQueryRequest queryRequest) {
+        return getSimilarityResult(queryRequest);
+    }
+
+    private List<SimilarityResult> getSimilarityResult(KvMatchQueryRequest queryRequest) {
         Path path = queryRequest.getColumnPath();
         Path queryPath = queryRequest.getQueryPath();
         Long startTime = queryRequest.getQueryStartTime();
@@ -78,7 +86,7 @@ public class BasicDao {
     }
 
     public List<TimeValue> getSeriesSimilar(Path path, Long startTime, Long endTime) {
-        String sql = String.format(SELECT_MATCHING_SERIES_SQL, path, startTime, endTime);
+        String sql = String.format(SELECT_SERIES_SQL, path, startTime, endTime);
         List<TimeValue> data = jdbcTemplate.query(sql, new RowMapper<TimeValue>() {
             @Override
             public TimeValue mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -86,5 +94,46 @@ public class BasicDao {
             }
         });
         return data;
+    }
+
+    private KvMatchQueryRequest createTempSeries(Path path, List<Pair<Integer, Double>> query, double epsilon) {
+        String pathStr = path.getFullPath();
+        String device = pathStr.substring(0, pathStr.lastIndexOf("."));
+        System.out.println("pathStr:"+pathStr);
+        String tmp_series_name = pathStr+suffix;
+        String sensor = pathStr.substring(pathStr.lastIndexOf(".") + 1, pathStr.length()) + suffix;
+        // create temp table
+        String sql = String.format(CREATE_TEMP_SERIES_SQL, tmp_series_name);
+        logger.debug(sql);
+        try {
+            jdbcTemplate.execute(sql);
+            // insert Q values
+            long startTime = 0L, endTime = 0L;
+            for (int i = 0; i < query.size(); i++) {
+                Pair<Integer, Double> q = query.get(i);
+                if (i == 0) startTime = (long) q.left;
+                else if (i == query.size() - 1) endTime = (long) q.left;
+                sql = String.format(INSERT_TEMP_SERIES_SQL, device, sensor, q.left, q.right);
+                jdbcTemplate.update(sql);
+            }
+            // create index for Q
+            return KvMatchQueryRequest.builder(path, new Path(tmp_series_name), startTime, endTime, epsilon).alpha(1.0).beta(0.0).build();
+        } catch (Exception e) {
+            logger.error(e.toString());
+            dropTempSeries(new Path(tmp_series_name));
+            return null;
+        }
+    }
+
+    private void dropTempSeries(Path tmpPath) {
+        String sql = String.format(DELETE_TEMP_SERIES_SQL, tmpPath);
+        jdbcTemplate.execute(sql);
+    }
+
+    public List<SimilarityResult> queryDraw(List<Pair<Integer, Double>> query, Path path, Double epsilon) {
+        KvMatchQueryRequest queryRequest = createTempSeries(path, query, epsilon);
+        List<SimilarityResult> result =  getSimilarityResult(queryRequest);
+        dropTempSeries(queryRequest.getQueryPath());
+        return result;
     }
 }

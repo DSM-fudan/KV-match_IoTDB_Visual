@@ -33,11 +33,15 @@ public class ResultController {
         // get stored query information
         List<String> param_paths = (List<String>) request.getSession().getAttribute("param_paths");
         String path = (String) request.getSession().getAttribute(token + "-path");
-        String Q_path = (String) request.getSession().getAttribute(token + "-Q_path");
         Double epsilon = (Double) request.getSession().getAttribute(token + "-epsilon");
+        Long length = (Long) request.getSession().getAttribute(token + "-length");
+        // draw query request
+        List<TimeValue> query = (List<TimeValue>) request.getSession().getAttribute(token + "-Q_query");
+
+        // normal query request
+        String Q_path = (String) request.getSession().getAttribute(token + "-Q_path");
         Long startTime = (Long) request.getSession().getAttribute(token + "-startOffset");
         Long endTime = (Long) request.getSession().getAttribute(token + "-endOffset");
-        Long length = endTime - startTime;
 
         List<Pair<Long, Double>> answers = (List<Pair<Long, Double>>) request.getSession().getAttribute(token + "-answers");
         Double timeUsage = (Double) request.getSession().getAttribute(token + "-timeUsage");
@@ -75,9 +79,13 @@ public class ResultController {
             }
             List<TimeValue> data = queryService.getSeriesSimilar(new Path(path), answers.get(index).left, answers.get(index).left + length);
             mav.addObject("data", new Series(data));
-            List<TimeValue> query = queryService.getSeriesSimilar(new Path(path), startTime, endTime);
+            if (startTime != null && endTime != null) {
+                // normal query request
+                query = queryService.getSeriesSimilar(new Path(path), startTime, endTime);
+            }
             query = alignQandX(query, data);
             mav.addObject("query", new Series(query));
+            // draw query request
         } else {
             mav.addObject("cntAnswers", 0);
         }
@@ -85,9 +93,7 @@ public class ResultController {
         mav.addObject("param_paths", param_paths);
         mav.addObject("answers", answers);
         mav.addObject("timeUsage", timeUsage);
-//        mav.addObject("indexTimeUsage", indexTimeUsage);
 
-//        mav.addObject("Wu", Wu);
         mav.addObject("path", path);
         mav.addObject("Q_path", Q_path);
         mav.addObject("epsilon", epsilon);

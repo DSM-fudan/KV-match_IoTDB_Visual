@@ -1,5 +1,6 @@
 package cn.edu.fudan.dsm.controller;
 
+import cn.edu.fudan.dsm.common.TimeValue;
 import cn.edu.fudan.dsm.service.QueryService;
 import cn.edu.thu.tsfile.common.utils.Pair;
 import cn.edu.thu.tsfile.timeseries.read.qp.Path;
@@ -52,11 +53,17 @@ public class QueryController {
 
         String token = UUID.randomUUID().toString();
         request.getSession().setAttribute(token + "-path", path);
-        request.getSession().setAttribute(token + "-Q_path", Q_query_Path);
         request.getSession().setAttribute(token + "-epsilon", epsilon);
-        request.getSession().setAttribute(token + "-startOffset", convertStringToLong(startOffset));
-        request.getSession().setAttribute(token + "-endOffset", convertStringToLong(endOffset));
 
+        // normal query
+        request.getSession().setAttribute(token + "-Q_path", Q_query_Path);
+        long st = convertStringToLong(startOffset);
+        long et = convertStringToLong(endOffset);
+        request.getSession().setAttribute(token + "-startOffset", st);
+        request.getSession().setAttribute(token + "-endOffset", et);
+        request.getSession().setAttribute(token + "-length", et - st);
+
+        // statistical information
         request.getSession().setAttribute(token + "-cntCandidates", result.left);
         request.getSession().setAttribute(token + "-answers", result.right);
         request.getSession().setAttribute(token + "-timeUsage", (clockEndTime - clockStartTime) / 1000.0);
@@ -72,34 +79,19 @@ public class QueryController {
     @ResponseBody
     public String queryDraw(@RequestParam String queryStr, HttpServletRequest request) throws IOException {
         // get parameters
-        String path = (String) request.getSession().getAttribute("query-path");
-        Double epsilon = (Double) request.getSession().getAttribute("query-epsilon");
+        String path = (String) request.getSession().getAttribute("query-param_path");
+        Double epsilon = (Double) request.getSession().getAttribute("query-param_epsilon");
 
         // pre-process query series
         String[] querySplits = queryStr.split("\\|");
-        List<Pair<Integer, Double>> queryTmp = new ArrayList<>();
+        List<Pair<Integer, Double>> query = new ArrayList<>();
         for (String querySplit : querySplits) {
             String[] pointSplit = querySplit.split(",");
-            queryTmp.add(new Pair<>(Integer.parseInt(pointSplit[0]), Double.parseDouble(pointSplit[1])));
+            query.add(new Pair<>(Integer.parseInt(pointSplit[0]), Double.parseDouble(pointSplit[1])));
         }
-        Integer length = queryTmp.get(queryTmp.size() - 1).left;
-        List<Double> query = new ArrayList<>();
-        query.add(queryTmp.get(0).right);
-        for (int i = 1; i < queryTmp.size(); i++) {
-            // amend points on the line
-            double k = (queryTmp.get(i).right - queryTmp.get(i-1).right) / (queryTmp.get(i).left - queryTmp.get(i-1).left);
-            for (long j = queryTmp.get(i-1).left + 1; j < queryTmp.get(i).left; j++) {
-                query.add(queryTmp.get(i-1).right + (j - queryTmp.get(i-1).left) * k);
-            }
-            query.add(queryTmp.get(i).right);  // add current point
-        }
-
-//        queryService.setParameter(N, R, 1024, Wu, 6, true, length, epsilon);
+        long length = (long) query.get(query.size() - 1).left;
         long clockStartTime = System.currentTimeMillis();
-
-//        Pair<Integer, List<Pair<Long, Double>>> result = queryService.queryOnce(query);
-        Pair<Integer, List<Pair<Long, Double>>> result = null;
-
+        Pair<Integer, List<Pair<Long, Double>>> result = queryService.queryDraw(query, new Path(path), epsilon);
         long clockEndTime = System.currentTimeMillis();
 
         logger.info("Candidates: {}, Answer: {}, Time usage: {} ms", result.left, result.right.size(), clockEndTime - clockStartTime);
@@ -111,9 +103,16 @@ public class QueryController {
 
         request.getSession().setAttribute(token + "-path", path);
         request.getSession().setAttribute(token + "-epsilon", epsilon);
+
+        // draw query
+        List<TimeValue> Q_query = new ArrayList<>();
+        for (Pair<Integer, Double> q : query) {
+            Q_query.add(new TimeValue((long) q.left, q.right));
+        }
+        request.getSession().setAttribute(token + "-Q_query", Q_query);
         request.getSession().setAttribute(token + "-length", length);
 
-        request.getSession().setAttribute(token + "-cntCandidates", result.left);
+        request.getSession().setAttribute(token + "-cntAnswers", result.left);
         request.getSession().setAttribute(token + "-answers", result.right);
         request.getSession().setAttribute(token + "-timeUsage", (clockEndTime - clockStartTime) / 1000.0);
 

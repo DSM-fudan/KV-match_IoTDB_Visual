@@ -42,4 +42,13 @@ public class QueryService {
     public List<TimeValue> getSeriesSimilar(Path path, Long startTime, Long endTime) {
         return basicDao.getSeriesSimilar(path, startTime, endTime);
     }
+
+    public Pair<Integer,List<Pair<Long,Double>>> queryDraw(List<Pair<Integer, Double>> query, Path path, Double epsilon) {
+        List<SimilarityResult> results = basicDao.queryDraw(query, path, epsilon);
+        List<Pair<Long, Double>> ans = new ArrayList<>();
+        for (SimilarityResult result : results) {
+            ans.add(new Pair<>(result.getStartTime(), result.getDistance()));
+        }
+        return new Pair<>(ans.size(), ans);
+    }
 }
