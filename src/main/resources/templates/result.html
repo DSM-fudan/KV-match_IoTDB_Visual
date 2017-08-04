@@ -97,10 +97,10 @@
                 <a class="list-group-item active">
                     <h4 class="list-group-item-heading">Result</h4>
                     <p class="list-group-item-text">
-                        Time: <span th:text="${timeUsage}"></span>s
+                        Time Usage: <span th:text="${timeUsage}"></span>s
                     </p>
                     <p class="list-group-item-text">
-                        Total: <span th:text="${cntAnswers}"></span>
+                        Number of Answers: <span th:text="${cntAnswers}"></span>
                     </p>
                 </a>
                 <div class="list-group-answer" th:classappend="(${unique && cntAnswers > #lists.size(answers)}) ? 'list-group-answer-unique'">
@@ -110,12 +110,12 @@
 
                     <a class="list-group-item" th:each="answer,iterationStatus : ${answers}"
                        th:href="@{/result(token=${token},index=${iterationStatus.count-1},unique=${unique})}">
+                        <span th:text="${#dates.format(answer.startTime, 'yyyy-MM-dd H:mm:ss.SSS')}"></span>
+                        <span th:text="${#dates.format(answer.endTime, 'yyyy-MM-dd H:mm:ss.SSS')}"></span>
+                        <span th:text="'#'+${iterationStatus.count}" class="label label-primary"></span>
                         <span class="badge">
                             <span th:text="${#numbers.formatDecimal(answer.distance, 1, 'COMMA', 2, 'POINT')}"></span>
                         </span>
-                        #<span th:text="${iterationStatus.count}" style="font-size:14px"></span>
-                        <span th:text="${#dates.format(answer.startTime, 'yyyy-MM-dd H:mm:ss.SSS')}"></span> -
-                        <span th:text="${#dates.format(answer.endTime, 'yyyy-MM-dd H:mm:ss.SSS')}"></span>
                     </a>
                     <!--<a class="list-group-item" th:each="answer,iterationStatus : ${answers}"-->
                        <!--href="javascript:void(0)" onclick="getDataAjax([[token]],[[iterationStatus.count-1]],[[unique]])">-->
@@ -157,7 +157,7 @@
         var dataList = [[${data.values}]];
         var queryList = [[${query.values}]];
         var realData = new Array();
-        for (i=0; i<dataList.length; i++) {
+        for (var i=0; i<dataList.length; i++) {
             var ts = dataList[i].time;
             var val = dataList[i].value;
             var ar = new Array(ts, val);
@@ -165,7 +165,7 @@
         }
 //        console.log(realData);
         var realQuery = new Array();
-        for (i=0; i<queryList.length; i++) {
+        for (var i=0; i<queryList.length; i++) {
             var ts = queryList[i].time;
             var val = queryList[i].value;
             var ar = new Array(ts, val);
@@ -175,6 +175,8 @@
         var startTime = new Date([[${answers[index].startTime}]]);
         startTime = js_format_date(startTime);
         var roundDistance = Number(([[${answers[index].distance}]]).toFixed(2));
+
+        Highcharts.setOptions({ global: { useUTC: false } });
 
         $('#container').highcharts({
             chart: {
@@ -259,12 +261,14 @@
 </script>
 <script th:inline="javascript" th:if="${#lists.isEmpty(answers)}">
     var realQuery = new Array();
-    for (i=0; i<queryList.length; i++) {
+    var queryList = [[${query.values}]];
+    for (var i=0; i<queryList.length; i++) {
         var ts = queryList[i].time;
         var val = queryList[i].value;
         var ar = new Array(ts, val);
         realQuery.push(ar);
     }
+    Highcharts.setOptions({ global: { useUTC: false } });
 
     $(function () {
         $('#container').highcharts({

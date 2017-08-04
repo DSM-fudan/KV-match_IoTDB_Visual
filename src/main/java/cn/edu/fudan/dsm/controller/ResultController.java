@@ -35,14 +35,18 @@ public class ResultController {
         String path = (String) request.getSession().getAttribute(token + "-path");
         Double epsilon = (Double) request.getSession().getAttribute(token + "-epsilon");
 
-        // draw query request
-        List<TimeValue> query = (List<TimeValue>) request.getSession().getAttribute(token + "-Q_query");
-
         // normal query request
         String Q_path = (String) request.getSession().getAttribute(token + "-Q_path");
         Long startTime = (Long) request.getSession().getAttribute(token + "-startOffset");
         Long endTime = (Long) request.getSession().getAttribute(token + "-endOffset");
-
+        List<TimeValue> query;
+        if (startTime != null && endTime != null) {
+            // normal query request
+            query = queryService.getSeriesSimilar(new Path(path), startTime, endTime);
+        } else {
+            // draw query request
+            query = (List<TimeValue>) request.getSession().getAttribute(token + "-Q_query");
+        }
         List<SimilarityResult> answers = (List<SimilarityResult>) request.getSession().getAttribute(token + "-answers");
         Double timeUsage = (Double) request.getSession().getAttribute(token + "-timeUsage");
 
@@ -79,13 +83,8 @@ public class ResultController {
             }
             List<TimeValue> data = queryService.getSeriesSimilar(new Path(path), answers.get(index).getStartTime(), answers.get(index).getEndTime());
             mav.addObject("data", new Series(data));
-            if (startTime != null && endTime != null) {
-                // normal query request
-                query = queryService.getSeriesSimilar(new Path(path), startTime, endTime);
-            }
             query = alignQandX(query, data);
-            mav.addObject("query", new Series(query));
-            // draw query request
+
         } else {
             mav.addObject("cntAnswers", 0);
         }
@@ -93,7 +92,7 @@ public class ResultController {
         mav.addObject("param_paths", param_paths);
         mav.addObject("answers", answers);
         mav.addObject("timeUsage", timeUsage);
-
+        mav.addObject("query", new Series(query));
         mav.addObject("path", path);
         mav.addObject("Q_path", Q_path);
         mav.addObject("epsilon", epsilon);
