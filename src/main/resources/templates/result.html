@@ -111,16 +111,18 @@
                     <a class="list-group-item" th:each="answer,iterationStatus : ${answers}"
                        th:href="@{/result(token=${token},index=${iterationStatus.count-1},unique=${unique})}">
                         <span class="badge">
-                            <span th:text="${#numbers.formatDecimal(answer.right, 1, 'COMMA', 2, 'POINT')}"></span>
+                            <span th:text="${#numbers.formatDecimal(answer.distance, 1, 'COMMA', 2, 'POINT')}"></span>
                         </span>
-                        #<span th:text="${iterationStatus.count}"></span> - <span th:text="${#dates.format(answer.left, 'yyyy-MM-dd H:mm:ss.SSS')}"></span>
+                        #<span th:text="${iterationStatus.count}" style="font-size:14px"></span>
+                        <span th:text="${#dates.format(answer.startTime, 'yyyy-MM-dd H:mm:ss.SSS')}"></span> -
+                        <span th:text="${#dates.format(answer.endTime, 'yyyy-MM-dd H:mm:ss.SSS')}"></span>
                     </a>
                     <!--<a class="list-group-item" th:each="answer,iterationStatus : ${answers}"-->
                        <!--href="javascript:void(0)" onclick="getDataAjax([[token]],[[iterationStatus.count-1]],[[unique]])">-->
                         <!--<span class="badge">-->
-                            <!--<span th:text="${#numbers.formatDecimal(answer.right, 1, 'COMMA', 2, 'POINT')}"></span>-->
+                            <!--<span th:text="${#numbers.formatDecimal(answer.distance, 1, 'COMMA', 2, 'POINT')}"></span>-->
                         <!--</span>-->
-                        <!--#<span th:text="${iterationStatus.count}"></span> - <span th:text="${answer.left}"></span>-->
+                        <!--#<span th:text="${iterationStatus.count}"></span> - <span th:text="${answer.startTime}"></span>-->
                     <!--</a>-->
                 </div>
             </div>
@@ -171,9 +173,9 @@
             realQuery.push(ar);
         }
 //        console.log(realQuery);
-        var startTime = new Date([[${answers[index].left}]]);
+        var startTime = new Date([[${answers[index].startTime}]]);
         startTime = js_format_date(startTime);
-        var roundDistance = Number(([[${answers[index].right}]]).toFixed(2));
+        var roundDistance = Number(([[${answers[index].distance}]]).toFixed(2));
 
         $('#container').highcharts({
             chart: {
@@ -243,13 +245,13 @@
             series: [{
                 name: 'Query series',
                 type: 'line',
-                pointStart: [[${answers[index].left}]],
+                pointStart: [[${answers[index].startTime}]],
                 zIndex: 1,
                 data: realQuery
             },{
                 name: 'Data series',
                 type: 'line',
-                pointStart: [[${answers[index].left}]],
+                pointStart: [[${answers[index].startTime}]],
                 zIndex: 0,
                 data: realData
             }]

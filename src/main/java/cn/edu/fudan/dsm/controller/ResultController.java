@@ -1,9 +1,9 @@
 package cn.edu.fudan.dsm.controller;
 
 import cn.edu.fudan.dsm.common.Series;
+import cn.edu.fudan.dsm.common.SimilarityResult;
 import cn.edu.fudan.dsm.common.TimeValue;
 import cn.edu.fudan.dsm.service.QueryService;
-import cn.edu.thu.tsfile.common.utils.Pair;
 import cn.edu.thu.tsfile.timeseries.read.qp.Path;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,7 +34,7 @@ public class ResultController {
         List<String> param_paths = (List<String>) request.getSession().getAttribute("param_paths");
         String path = (String) request.getSession().getAttribute(token + "-path");
         Double epsilon = (Double) request.getSession().getAttribute(token + "-epsilon");
-        Long length = (Long) request.getSession().getAttribute(token + "-length");
+
         // draw query request
         List<TimeValue> query = (List<TimeValue>) request.getSession().getAttribute(token + "-Q_query");
 
@@ -43,7 +43,7 @@ public class ResultController {
         Long startTime = (Long) request.getSession().getAttribute(token + "-startOffset");
         Long endTime = (Long) request.getSession().getAttribute(token + "-endOffset");
 
-        List<Pair<Long, Double>> answers = (List<Pair<Long, Double>>) request.getSession().getAttribute(token + "-answers");
+        List<SimilarityResult> answers = (List<SimilarityResult>) request.getSession().getAttribute(token + "-answers");
         Double timeUsage = (Double) request.getSession().getAttribute(token + "-timeUsage");
 
         ModelAndView mav = new ModelAndView("result");
@@ -54,7 +54,7 @@ public class ResultController {
             return mav;
         } else if (!answers.isEmpty()) {
             if (unique) {
-                List<Pair<Long, Double>> uniqueAnswers = new ArrayList<>();
+                List<SimilarityResult> uniqueAnswers = new ArrayList<>();
                 int ansCnt = Math.min(answers.size(), MAX_RESULTS_DISPLAY);
                 boolean[] visited = new boolean[ansCnt];
                 for (int i = 0; i < ansCnt; i++) {
@@ -62,7 +62,7 @@ public class ResultController {
                         uniqueAnswers.add(answers.get(i));
                         for (int j = i + 1; j < ansCnt; j++) {
                             if (!visited[j]) {
-                                if (answers.get(j).left < answers.get(i).left + length && answers.get(j).left + length > answers.get(i).left) {
+                                if (answers.get(j).getStartTime() < answers.get(i).getEndTime() && answers.get(j).getEndTime() > answers.get(i).getStartTime()) {
                                     visited[j] = true;
                                 }
                             }
@@ -77,7 +77,7 @@ public class ResultController {
                     answers = answers.subList(0, MAX_RESULTS_DISPLAY);
                 }
             }
-            List<TimeValue> data = queryService.getSeriesSimilar(new Path(path), answers.get(index).left, answers.get(index).left + length);
+            List<TimeValue> data = queryService.getSeriesSimilar(new Path(path), answers.get(index).getStartTime(), answers.get(index).getEndTime());
             mav.addObject("data", new Series(data));
             if (startTime != null && endTime != null) {
                 // normal query request
@@ -97,7 +97,7 @@ public class ResultController {
         mav.addObject("path", path);
         mav.addObject("Q_path", Q_path);
         mav.addObject("epsilon", epsilon);
-        mav.addObject("length", length);
+//        mav.addObject("length", length);
 
         mav.addObject("token", token);
         mav.addObject("index", index);
