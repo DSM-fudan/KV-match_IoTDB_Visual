@@ -1,3 +1,18 @@
+// query time picker
+$('#input_start_time').datetimepicker({
+    showSecond: true,
+    showMillisec: true,
+    dateFormat: 'yy-mm-dd',
+    timeFormat: 'hh:mm:ss.l'
+});
+
+$('#input_end_time').datetimepicker({
+    showSecond: true,
+    showMillisec: true,
+    dateFormat: 'yy-mm-dd',
+    timeFormat: 'hh:mm:ss.l'
+});
+
 $("#button_query_generate").click(function() {
     $(this).button('loading');
     queryAjax("#query_generate");
@@ -194,3 +209,9 @@ function js_format_date(date) {
     millisecond = "" + date.getMilliseconds(); if (millisecond.length == 1) { millisecond = "0" + millisecond; }
     return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second + "." + millisecond;
 }
+
+$('#input_start_time').datetimepicker({
+    showSecond: true,
+    showMillisec: true,
+    timeFormat: 'hh:mm:ss.l'
+});
