@@ -40,13 +40,13 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" th:href="@{/}">KVIoDB</a>
+            <a class="navbar-brand" th:href="@{/}">IoTDB</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 <li class="active"><a th:href="@{/}">Home</a></li>
-                <li><a th:href="@{/about}">About</a></li>
-                <li><a th:href="@{/contact}">Contact</a></li>
+                <!--<li><a th:href="@{/about}">About</a></li>-->
+                <!--<li><a th:href="@{/contact}">Contact</a></li>-->
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a class="param_status"></a></li>
@@ -103,35 +103,35 @@
             </div>
             <div class="row">
                 <div class="col-xs-6 col-lg-4">
-                    <h2>Introduction</h2>
-                    <p>HBase is of a NoSQL database known as the scheme of key value. HBase features high scalability and high flexibility, delivering a high IO performance of big data. Lots of time series are stored in it.</p>
-                    <p><a class="btn btn-default" th:href="@{/about#introduction}" role="button">View details &raquo;</a></p>
+                    <h2>IoTDB</h2>
+                    <p>IoTDB is a timeseries database based on TsFile. The system is reliable and fast, suitable for IoT big data processing. It can manage huge amount of timeseries data and support many query types.</p>
+                    <p><a class="btn btn-default" href="#IoTDB" role="button">View details &raquo;</a></p>
                 </div><!--/.col-xs-6.col-lg-4-->
                 <div class="col-xs-6 col-lg-4">
-                    <h2>Related works</h2>
+                    <h2>KV-match</h2>
                     <p>Similarity-based time-series retrieval has been a subject of long-term study due to its wide usage in many applications, such as financial data analysis, weather data forecasting, and multimedia data retrieval.</p>
-                    <p><a class="btn btn-default" th:href="@{/about#related_works}" role="button">View details &raquo;</a></p>
+                    <p><a class="btn btn-default" href="#KV-match" role="button">View details &raquo;</a></p>
                 </div><!--/.col-xs-6.col-lg-4-->
                 <div class="col-xs-6 col-lg-4">
-                    <h2>Preliminary</h2>
-                    <p>Given a set T S of time series, a query time series Q, and a distance threshold ǫ, a similarity search retrieves the time series S ∈ T S such that D(Q, S) ≤ ǫ, where D(·, ·) is a distance function.</p>
-                    <p><a class="btn btn-default" th:href="@{/about#preliminary}" role="button">View details &raquo;</a></p>
+                    <h2>TsFile</h2>
+                    <p>TsFile is a columnar storage file format designed for time series data, which supports efficient compression and query. It is easy to integrate TsFile into your IoT big data processing frameworks.</p>
+                    <p><a class="btn btn-default" href="#similarity_search" role="button">View details &raquo;</a></p>
                 </div><!--/.col-xs-6.col-lg-4-->
-                <div class="col-xs-6 col-lg-4">
-                    <h2>Build index</h2>
-                    <p>In this section, we introduce the index building algorithm and the index structure we used. The index structure take advantage of key-value storage system.</p>
-                    <p><a class="btn btn-default" th:href="@{/about#build_index}" role="button">View details &raquo;</a></p>
-                </div><!--/.col-xs-6.col-lg-4-->
-                <div class="col-xs-6 col-lg-4">
-                    <h2>Query</h2>
-                    <p>In this section, we introduce the similarity query algorithm, and use HBase Coprocessor to take full advantages of cluster resources.</p>
-                    <p><a class="btn btn-default" th:href="@{/about#query}" role="button">View details &raquo;</a></p>
-                </div><!--/.col-xs-6.col-lg-4-->
-                <div class="col-xs-6 col-lg-4">
-                    <h2>Experiments</h2>
-                    <p>An extensive empirical study shows that our index structure and algorithm supports time series similarity search effectively and efficiently.</p>
-                    <p><a class="btn btn-default" th:href="@{/about#experiments}" role="button">View details &raquo;</a></p>
-                </div><!--/.col-xs-6.col-lg-4-->
+                <!--<div class="col-xs-6 col-lg-4">-->
+                    <!--<h2>Build index</h2>-->
+                    <!--<p>In this section, we introduce the index building algorithm and the index structure we used. The index structure take advantage of key-value storage system.</p>-->
+                    <!--<p><a class="btn btn-default" th:href="@{/about#build_index}" role="button">View details &raquo;</a></p>-->
+                <!--</div>&lt;!&ndash;/.col-xs-6.col-lg-4&ndash;&gt;-->
+                <!--<div class="col-xs-6 col-lg-4">-->
+                    <!--<h2>Query</h2>-->
+                    <!--<p>In this section, we introduce the similarity query algorithm, and use HBase Coprocessor to take full advantages of cluster resources.</p>-->
+                    <!--<p><a class="btn btn-default" th:href="@{/about#query}" role="button">View details &raquo;</a></p>-->
+                <!--</div>&lt;!&ndash;/.col-xs-6.col-lg-4&ndash;&gt;-->
+                <!--<div class="col-xs-6 col-lg-4">-->
+                    <!--<h2>Experiments</h2>-->
+                    <!--<p>An extensive empirical study shows that our index structure and algorithm supports time series similarity search effectively and efficiently.</p>-->
+                    <!--<p><a class="btn btn-default" th:href="@{/about#experiments}" role="button">View details &raquo;</a></p>-->
+                <!--</div>&lt;!&ndash;/.col-xs-6.col-lg-4&ndash;&gt;-->
             </div><!--/row-->
         </div><!--/.col-xs-12.col-sm-9-->
 
@@ -143,10 +143,10 @@
                         Choose a query type below!
                     </p>
                 </a>
-                <a href="#" data-toggle="modal" data-target="#modal_generate" class="list-group-item">Generate query series randomly</a>
-                <a href="#" data-toggle="modal" data-target="#modal_draw" class="list-group-item">Draw query series</a>
-                <a href="#" data-toggle="modal" data-target="#modal_offset" class="list-group-item">Provide data offset</a>
-                <a href="#" data-toggle="modal" data-target="#modal_offset_random" class="list-group-item">Choose data offset randomly</a>
+                <!--<a href="#" data-toggle="modal" data-target="#modal_generate" class="list-group-item">Generate query series randomly</a>-->
+                <a href="#" data-toggle="modal" data-target="#modal_draw" class="list-group-item">Draw query series by yourself</a>
+                <a href="#" data-toggle="modal" data-target="#modal_offset" class="list-group-item">Pick query series from exist ones</a>
+                <!--<a href="#" data-toggle="modal" data-target="#modal_offset_random" class="list-group-item">Choose data offset randomly</a>-->
             </div>
         </div><!--/.sidebar-offcanvas-->
     </div><!--/row-->
@@ -154,7 +154,7 @@
     <hr>
 
     <footer>
-        <p>&copy; 2017 Jiaye Wu</p>
+        <p>&copy; 2017 <i>Jiaye Wu</i> and <i>Ningting Pan</i></p>
     </footer>
 
 </div><!--/.container-->
@@ -190,7 +190,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="modal_draw_title">Draw query series</h4>
+                <h4 class="modal-title" id="modal_draw_title">Draw query series by yourself</h4>
             </div>
             <div class="modal-body">
                 <div id="container"></div>
@@ -208,7 +208,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="modal_offset_title">Provide data offset</h4>
+                <h4 class="modal-title" id="modal_offset_title">Pick query series from exist ones</h4>
             </div>
             <div class="modal-body">
                 <form id="query_offset" class="form-horizontal">
