@@ -24,7 +24,6 @@ public class MainController {
     public ModelAndView index(HttpServletRequest request) {
         ModelAndView mav = new ModelAndView("index");
         List<String> param_paths = queryService.getPath();
-        System.out.println(param_paths);
         mav.addObject("param_paths", param_paths);
         request.getSession().setAttribute("param_paths", param_paths);
         return mav;
@@ -52,6 +51,9 @@ public class MainController {
                 break;
             case "Double":
                 request.getSession().setAttribute("query-" + param, Double.parseDouble(value));
+                break;
+            case "Boolean":
+                request.getSession().setAttribute("query-" + param, Boolean.parseBoolean(value));
                 break;
             default:
                 request.getSession().setAttribute("query-" + param, value);

@@ -13,6 +13,9 @@ $('#input_end_time').datetimepicker({
     timeFormat: 'hh:mm:ss.l'
 });
 
+// normalized switch
+$("[name='param_normalized']").bootstrapSwitch();
+
 $("#button_query_generate").click(function() {
     $(this).button('loading');
     queryAjax("#query_generate");
@@ -161,20 +164,17 @@ $(function () {
         $('#container').highcharts().reflow();
     });
 
-    // $('input[type=radio][name=param_R]').change(function() {
-    //     paramAjax('R', 'Integer', this.value);
-    // });
-    //
-    // $('input[type=radio][name=param_Wu]').change(function() {
-    //     paramAjax('Wu', 'Integer', this.value);
-    // });
-
     $("#param_Path").change(function() {
         paramAjax('param_path', 'String', this.value);
     });
 
     $('input[type=number][id=param_Epsilon]').on('input', function() {
         paramAjax('param_epsilon', 'Double', this.value);
+    });
+
+    $('input[type=checkbox][id=param_Normalize_switch]').on('switchChange.bootstrapSwitch', function(event, state) {
+        console.log(state);
+        paramAjax('param_normalized', 'Boolean', state);
     });
 
     $('input[type=number][id=param_Alpha]').on('input', function() {

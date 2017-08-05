@@ -13,6 +13,7 @@
 
     <!-- Bootstrap core CSS -->
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/bootstrap-switch.css}" rel="stylesheet">
 
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <link th:href="@{/css/ie10-viewport-bug-workaround.css}" rel="stylesheet">
@@ -67,6 +68,12 @@
                                 <label class="col-sm-3 control-label">Error</label>
                                 <div class="col-sm-9">
                                     <input type="number" class="form-control" name="param_epsilon" id="param_Epsilon" placeholder="Distance threshold" th:value="${param_epsilon}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Normalized</label>
+                                <div class="col-sm-9" style="padding-left:50px;">
+                                    <input type="checkbox" class="form-control" name="param_normalized" id="param_Normalize_switch" th:checked="${param_normalized}">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -278,6 +285,7 @@
 <script th:src="@{/js/jquery-ui.js}"></script>
 <script th:src="@{/js/jquery-ui-timepicker-addon.js}"></script>
 <script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/bootstrap-switch.js}"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script th:src="@{/js/ie10-viewport-bug-workaround.js}"></script>
 <script th:src="@{/js/offcanvas.js}"></script>

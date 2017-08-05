@@ -25,6 +25,7 @@ public class Interceptor implements HandlerInterceptor {
 //                modelAndView.addObject("query_Wu", req.getSession().getAttribute("query-Wu"));
             modelAndView.addObject("param_path", req.getSession().getAttribute("query-param_path"));
             modelAndView.addObject("param_epsilon", req.getSession().getAttribute("query-param_epsilon"));
+            modelAndView.addObject("param_normalized", req.getSession().getAttribute("query-param_normalized"));
             modelAndView.addObject("param_alpha", req.getSession().getAttribute("query-param_alpha"));
             modelAndView.addObject("param_beta", req.getSession().getAttribute("query-param_beta"));
         }
@@ -43,6 +44,7 @@ public class Interceptor implements HandlerInterceptor {
 //        request.getSession().setAttribute("param-epsilon", 50.0);
         request.getSession().setAttribute("query-param_epsilon", 50.0);
         request.getSession().setAttribute("query-param_path", "");
+        request.getSession().setAttribute("query-param_normalized", false);
         request.getSession().setAttribute("query-param_alpha", 1.0);
         request.getSession().setAttribute("query-param_beta", 0.0);
     }

@@ -34,6 +34,7 @@ public class ResultController {
         List<String> param_paths = (List<String>) request.getSession().getAttribute("param_paths");
         String path = (String) request.getSession().getAttribute(token + "-path");
         Double epsilon = (Double) request.getSession().getAttribute(token + "-epsilon");
+        Boolean normalized = (Boolean) request.getSession().getAttribute("query-param_normalized");
         Double alpha = (Double) request.getSession().getAttribute(token + "-alpha");
         Double beta = (Double) request.getSession().getAttribute(token + "-beta");
 
@@ -98,6 +99,7 @@ public class ResultController {
         mav.addObject("path", path);
         mav.addObject("Q_path", Q_path);
         mav.addObject("param_epsilon", epsilon);
+        mav.addObject("param_normalized", normalized);
         mav.addObject("param_alpha", alpha);
         mav.addObject("param_beta", beta);
 

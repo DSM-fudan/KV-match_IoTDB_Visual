@@ -41,8 +41,13 @@ public class QueryController {
         // get parameters
         String path = (String) request.getSession().getAttribute("query-param_path");
         Double epsilon = (Double) request.getSession().getAttribute("query-param_epsilon");
+        Boolean normalized = (Boolean) request.getSession().getAttribute("query-param_normalized");
         Double alpha = (Double) request.getSession().getAttribute("query-param_alpha");
         Double beta = (Double) request.getSession().getAttribute("query-param_beta");
+        if (normalized == false || alpha == null || beta == null) {
+            alpha = 1.0;
+            beta = 0.0;
+        }
         KvMatchQueryRequest queryRequest = KvMatchQueryRequest.builder(new Path(path), new Path(Q_query_Path),
                 convertStringToLong(startOffset), convertStringToLong(endOffset), epsilon).alpha(alpha).beta(beta).build();
         long clockStartTime = System.currentTimeMillis();
@@ -56,6 +61,7 @@ public class QueryController {
         String token = UUID.randomUUID().toString();
         request.getSession().setAttribute(token + "-path", path);
         request.getSession().setAttribute(token + "-epsilon", epsilon);
+        request.getSession().setAttribute(token + "-normalized", normalized);
         request.getSession().setAttribute(token + "-alpha", alpha);
         request.getSession().setAttribute(token + "-beta", beta);
 
@@ -84,9 +90,13 @@ public class QueryController {
         // get parameters
         String path = (String) request.getSession().getAttribute("query-param_path");
         Double epsilon = (Double) request.getSession().getAttribute("query-param_epsilon");
+        Boolean normalized = (Boolean) request.getSession().getAttribute("query-param_normalized");
         Double alpha = (Double) request.getSession().getAttribute("query-param_alpha");
         Double beta = (Double) request.getSession().getAttribute("query-param_beta");
-
+        if (normalized == false || alpha == null || beta == null) {
+            alpha = 1.0;
+            beta = 0.0;
+        }
         // pre-process query series
         String[] querySplits = queryStr.split("\\|");
         List<Pair<Integer, Double>> query = new ArrayList<>();
@@ -110,6 +120,7 @@ public class QueryController {
 
         request.getSession().setAttribute(token + "-path", path);
         request.getSession().setAttribute(token + "-epsilon", epsilon);
+        request.getSession().setAttribute(token + "-normalized", normalized);
         request.getSession().setAttribute(token + "-alpha", alpha);
         request.getSession().setAttribute(token + "-beta", beta);
 
