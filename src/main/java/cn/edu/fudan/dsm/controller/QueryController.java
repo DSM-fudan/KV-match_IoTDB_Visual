@@ -41,8 +41,10 @@ public class QueryController {
         // get parameters
         String path = (String) request.getSession().getAttribute("query-param_path");
         Double epsilon = (Double) request.getSession().getAttribute("query-param_epsilon");
+        Double alpha = (Double) request.getSession().getAttribute("query-param_alpha");
+        Double beta = (Double) request.getSession().getAttribute("query-param_beta");
         KvMatchQueryRequest queryRequest = KvMatchQueryRequest.builder(new Path(path), new Path(Q_query_Path),
-                convertStringToLong(startOffset), convertStringToLong(endOffset), epsilon).alpha(1.0).beta(0.0).build();
+                convertStringToLong(startOffset), convertStringToLong(endOffset), epsilon).alpha(alpha).beta(beta).build();
         long clockStartTime = System.currentTimeMillis();
         List<SimilarityResult> result = queryService.query(queryRequest); // 起始时间，距离
         long clockEndTime = System.currentTimeMillis();
@@ -54,6 +56,8 @@ public class QueryController {
         String token = UUID.randomUUID().toString();
         request.getSession().setAttribute(token + "-path", path);
         request.getSession().setAttribute(token + "-epsilon", epsilon);
+        request.getSession().setAttribute(token + "-alpha", alpha);
+        request.getSession().setAttribute(token + "-beta", beta);
 
         // normal query
         request.getSession().setAttribute(token + "-Q_path", Q_query_Path);
@@ -80,6 +84,8 @@ public class QueryController {
         // get parameters
         String path = (String) request.getSession().getAttribute("query-param_path");
         Double epsilon = (Double) request.getSession().getAttribute("query-param_epsilon");
+        Double alpha = (Double) request.getSession().getAttribute("query-param_alpha");
+        Double beta = (Double) request.getSession().getAttribute("query-param_beta");
 
         // pre-process query series
         String[] querySplits = queryStr.split("\\|");
@@ -89,9 +95,12 @@ public class QueryController {
             query.add(new Pair<>(Integer.parseInt(pointSplit[0]), Double.parseDouble(pointSplit[1])));
         }
         long clockStartTime = System.currentTimeMillis();
-        List<SimilarityResult> result = queryService.queryDraw(query, new Path(path), epsilon);
+        List<SimilarityResult> result = queryService.queryDraw(query, new Path(path), epsilon, alpha, beta);
         long clockEndTime = System.currentTimeMillis();
-
+        if (result == null) {
+            logger.error("Query failed.");
+            return "";
+        }
         logger.info("Answer: {}, Time usage: {} ms", result.size(), clockEndTime - clockStartTime);
         if (!result.isEmpty()) {
             logger.info("Best: start - {}, end - {}, Distance: {}", result.get(0).getStartTime(), result.get(0).getEndTime(), result.get(0).getDistance());
@@ -101,6 +110,8 @@ public class QueryController {
 
         request.getSession().setAttribute(token + "-path", path);
         request.getSession().setAttribute(token + "-epsilon", epsilon);
+        request.getSession().setAttribute(token + "-alpha", alpha);
+        request.getSession().setAttribute(token + "-beta", beta);
 
         // draw query
         List<TimeValue> Q_query = new ArrayList<>();

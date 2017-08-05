@@ -34,6 +34,8 @@ public class ResultController {
         List<String> param_paths = (List<String>) request.getSession().getAttribute("param_paths");
         String path = (String) request.getSession().getAttribute(token + "-path");
         Double epsilon = (Double) request.getSession().getAttribute(token + "-epsilon");
+        Double alpha = (Double) request.getSession().getAttribute(token + "-alpha");
+        Double beta = (Double) request.getSession().getAttribute(token + "-beta");
 
         // normal query request
         String Q_path = (String) request.getSession().getAttribute(token + "-Q_path");
@@ -95,8 +97,9 @@ public class ResultController {
         mav.addObject("query", new Series(query));
         mav.addObject("path", path);
         mav.addObject("Q_path", Q_path);
-        mav.addObject("epsilon", epsilon);
-//        mav.addObject("length", length);
+        mav.addObject("param_epsilon", epsilon);
+        mav.addObject("param_alpha", alpha);
+        mav.addObject("param_beta", beta);
 
         mav.addObject("token", token);
         mav.addObject("index", index);

@@ -28,9 +28,10 @@ public class BasicDao {
     private static final String SELECT_MATCHING_SQL = "select index subsequence_matching(%s, %s, %s, %s, %s, %s, %s)"; // X, Q startTime endTime epsilon alpha beta
     private static final String SELECT_SERIES_SQL = "select * from %s where time >= %s and time <= %s";
     private static final String CREATE_TEMP_SERIES_SQL = "create timeseries %s with datatype=DOUBLE,encoding=RLE"; //path + suffix
+    private static final String SET_STORAGE_GROUP_SQL = "set storage group to %s";
     private static final String DELETE_TEMP_SERIES_SQL = "delete timeseries %s";
     private static final String INSERT_TEMP_SERIES_SQL = "insert into %s(timestamp,%s) values (%s,%s)"; //device sensor time value
-    private static final String suffix = "_tmp_index";
+    private static final String PREFIX = "root.tmp";
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -39,19 +40,24 @@ public class BasicDao {
     }
 
     public List<String> getMetaData() {
-        ConnectionCallback<Object> connectionCallback = new ConnectionCallback<Object>() {
-            public Object doInConnection(Connection connection) throws SQLException {
-                DatabaseMetaData databaseMetaData = connection.getMetaData();
-                ResultSet resultSet = databaseMetaData.getColumns(null, null, "root.*", null);
-                List<String> columnsName = new ArrayList<>();
-                while(resultSet.next()){
-                    columnsName.add(resultSet.getString(0));
-                    //System.out.println(String.format("column %s", resultSet.getString(0)));
+        try {
+            ConnectionCallback<Object> connectionCallback = new ConnectionCallback<Object>() {
+                public Object doInConnection(Connection connection) throws SQLException {
+                    DatabaseMetaData databaseMetaData = connection.getMetaData();
+                    ResultSet resultSet = databaseMetaData.getColumns(null, null, "root.*", null);
+                    List<String> columnsName = new ArrayList<>();
+                    while(resultSet.next()){
+                        columnsName.add(resultSet.getString(0));
+                        //System.out.println(String.format("column %s", resultSet.getString(0)));
+                    }
+                    return columnsName;
                 }
-                return columnsName;
-            }
-        };
-        return (List<String>)jdbcTemplate.execute(connectionCallback);
+            };
+            return (List<String>)jdbcTemplate.execute(connectionCallback);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return null;
+        }
     }
 
     public long getSeriesLength(String path) {
@@ -72,6 +78,7 @@ public class BasicDao {
         double alpha = queryRequest.getAlpha();
         double beta = queryRequest.getBeta();
         String sql = String.format(SELECT_MATCHING_SQL, path, queryPath, startTime, endTime, epsilon, alpha, beta);
+        logger.info(sql);
         List<SimilarityResult> similarityResults = jdbcTemplate.query(sql, new RowMapper<SimilarityResult>() {
             @Override
             public SimilarityResult mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -87,6 +94,7 @@ public class BasicDao {
 
     public List<TimeValue> getSeriesSimilar(Path path, Long startTime, Long endTime) {
         String sql = String.format(SELECT_SERIES_SQL, path, startTime, endTime);
+        logger.info(sql);
         List<TimeValue> data = jdbcTemplate.query(sql, new RowMapper<TimeValue>() {
             @Override
             public TimeValue mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -96,16 +104,19 @@ public class BasicDao {
         return data;
     }
 
-    private KvMatchQueryRequest createTempSeries(Path path, List<Pair<Integer, Double>> query, double epsilon) {
+    private KvMatchQueryRequest createTempSeries(Path path, List<Pair<Integer, Double>> query, double epsilon, double alpha, double beta) {
         String pathStr = path.getFullPath();
-        String device = pathStr.substring(0, pathStr.lastIndexOf("."));
-        System.out.println("pathStr:"+pathStr);
-        String tmp_series_name = pathStr+suffix;
-        String sensor = pathStr.substring(pathStr.lastIndexOf(".") + 1, pathStr.length()) + suffix;
+        String device = pathStr.replace(".","");
+        String sensor = "t" + String.valueOf(System.currentTimeMillis() % 10000);
+        String tmp_series_name = PREFIX + "." + device + "." + sensor; //root.tmp.rootlaptopd1s1.15984293482
         // create temp table
         String sql = String.format(CREATE_TEMP_SERIES_SQL, tmp_series_name);
-        logger.debug(sql);
+        logger.info(sql);
         try {
+            jdbcTemplate.execute(sql);
+            // set storage group
+            sql = String.format(SET_STORAGE_GROUP_SQL, PREFIX);
+            logger.info(sql);
             jdbcTemplate.execute(sql);
             // insert Q values
             long startTime = 0L, endTime = 0L;
@@ -113,11 +124,12 @@ public class BasicDao {
                 Pair<Integer, Double> q = query.get(i);
                 if (i == 0) startTime = (long) q.left;
                 else if (i == query.size() - 1) endTime = (long) q.left;
-                sql = String.format(INSERT_TEMP_SERIES_SQL, device, sensor, q.left, q.right);
-                jdbcTemplate.update(sql);
+                sql = String.format(INSERT_TEMP_SERIES_SQL, PREFIX + "." + device, sensor, q.left, q.right);
+                logger.info(sql);
+                jdbcTemplate.execute(sql);
             }
             // create index for Q
-            return KvMatchQueryRequest.builder(path, new Path(tmp_series_name), startTime, endTime, epsilon).alpha(1.0).beta(0.0).build();
+            return KvMatchQueryRequest.builder(path, new Path(tmp_series_name), startTime, endTime, epsilon).alpha(alpha).beta(beta).build();
         } catch (Exception e) {
             logger.error(e.toString());
             dropTempSeries(new Path(tmp_series_name));
@@ -130,8 +142,9 @@ public class BasicDao {
         jdbcTemplate.execute(sql);
     }
 
-    public List<SimilarityResult> queryDraw(List<Pair<Integer, Double>> query, Path path, Double epsilon) {
-        KvMatchQueryRequest queryRequest = createTempSeries(path, query, epsilon);
+    public List<SimilarityResult> queryDraw(List<Pair<Integer, Double>> query, Path path, double epsilon, double alpha, double beta) {
+        KvMatchQueryRequest queryRequest = createTempSeries(path, query, epsilon, alpha, beta);
+        if (queryRequest == null) return null;
         List<SimilarityResult> result =  getSimilarityResult(queryRequest);
         dropTempSeries(queryRequest.getQueryPath());
         return result;

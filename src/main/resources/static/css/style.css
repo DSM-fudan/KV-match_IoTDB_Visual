@@ -22,3 +22,9 @@
 .ui-tpicker-grid-label { background: none; border: none; margin: 0; padding: 0; }
 .ui_tpicker_hour_label,.ui_tpicker_minute_label,.ui_tpicker_second_label,
 .ui_tpicker_millisec_label,.ui_tpicker_time_label{padding-left:20px}
+
+.rank_label {
+    float: right;
+    font-size:12px;
+    margin-right:8px;
+}

@@ -38,8 +38,8 @@ public class QueryService {
         return basicDao.getSeriesSimilar(path, startTime, endTime);
     }
 
-    public List<SimilarityResult> queryDraw(List<Pair<Integer, Double>> query, Path path, Double epsilon) {
-        List<SimilarityResult> results = basicDao.queryDraw(query, path, epsilon);
+    public List<SimilarityResult> queryDraw(List<Pair<Integer, Double>> query, Path path, Double epsilon, Double alpha, Double beta) {
+        List<SimilarityResult> results = basicDao.queryDraw(query, path, epsilon, alpha, beta);
         return results;
     }
 }

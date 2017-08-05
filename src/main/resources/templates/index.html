@@ -9,7 +9,7 @@
     <meta name="author" content="">
     <link rel="icon" th:href="@{/favicon.ico}">
 
-    <title>HTSI - HBase Time Series Index</title>
+    <title>KV-match on IoTDB</title>
 
     <!-- Bootstrap core CSS -->
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
@@ -40,7 +40,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" th:href="@{/}">HTSI</a>
+            <a class="navbar-brand" th:href="@{/}">KVIoDB</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
@@ -63,42 +63,22 @@
                                     </select>
                                 </div>
                             </div>
-                            <!--<div class="form-group">-->
-                            <!--<label class="col-sm-3 control-label">Region</label>-->
-                            <!--<div class="col-sm-9">-->
-                            <!--<div class="btn-group" data-toggle="buttons">-->
-                            <!--<label class="btn btn-default" th:classappend="(${query_R} == 4) ? 'active'">-->
-                            <!--<input type="radio" name="param_R" id="param_R_4" value="4" autocomplete="off"> 4-->
-                            <!--</label>-->
-                            <!--<label class="btn btn-default" th:classappend="(${query_R} == 8) ? 'active'">-->
-                            <!--<input type="radio" name="param_R" id="param_R_8" value="8" autocomplete="off"> 8-->
-                            <!--</label>-->
-                            <!--<label class="btn btn-default" th:classappend="(${query_R} == 16) ? 'active'">-->
-                            <!--<input type="radio" name="param_R" id="param_R_16" value="16" autocomplete="off"> 16-->
-                            <!--</label>-->
-                            <!--<label class="btn btn-default" th:classappend="(${query_R} == 20) ? 'active'">-->
-                            <!--<input type="radio" name="param_R" id="param_R_20" value="20" autocomplete="off"> 20-->
-                            <!--</label>-->
-                            <!--</div>-->
-                            <!--</div>-->
-                            <!--</div>-->
-                            <!--<div class="form-group">-->
-                            <!--<label class="col-sm-3 control-label">W<sub>u</sub></label>-->
-                            <!--<div class="col-sm-9">-->
-                            <!--<div class="btn-group" data-toggle="buttons">-->
-                            <!--<label class="btn btn-default" th:classappend="(${query_Wu} == 25) ? 'active'">-->
-                            <!--<input type="radio" name="param_Wu" id="param_Wu_25" value="25" autocomplete="off"> 25-->
-                            <!--</label>-->
-                            <!--<label class="btn btn-default" th:classappend="(${query_Wu} == 50) ? 'active'">-->
-                            <!--<input type="radio" name="param_Wu" id="param_Wu_50" value="50" autocomplete="off"> 50-->
-                            <!--</label>-->
-                            <!--</div>-->
-                            <!--</div>-->
-                            <!--</div>-->
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Error</label>
                                 <div class="col-sm-9">
                                     <input type="number" class="form-control" name="param_epsilon" id="param_Epsilon" placeholder="Distance threshold" th:value="${param_epsilon}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Alpha</label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" name="param_alpha" id="param_Alpha" th:value="${param_alpha}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Beta</label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" name="param_beta" id="param_Beta" th:value="${param_beta}">
                                 </div>
                             </div>
                         </form>
@@ -118,8 +98,8 @@
                 <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
             </p>
             <div class="jumbotron">
-                <h1>HBase Time Series Index</h1>
-                <p>This is a system to show the potential of the HBase Time Series Index system. Try some query series to see the performance.</p>
+                <h1>KV-match on IoTDB</h1>
+                <p>This is a system to show the KV-match time series subsequence matching on IoTDB. Try some query series to see the performance.</p>
             </div>
             <div class="row">
                 <div class="col-xs-6 col-lg-4">
@@ -296,7 +276,6 @@
 <script th:src="@{/js/jquery.min.js}"></script>
 <script>window.jQuery || document.write('<script th:src="@{/js/jquery.min.js}"><\/script>')</script>
 <script th:src="@{/js/jquery-ui.js}"></script>
-<!--<script th:src="@{/js/jquery-ui-slide.min.js}"></script>-->
 <script th:src="@{/js/jquery-ui-timepicker-addon.js}"></script>
 <script th:src="@{/js/bootstrap.min.js}"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->

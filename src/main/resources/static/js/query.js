@@ -176,6 +176,14 @@ $(function () {
     $('input[type=number][id=param_Epsilon]').on('input', function() {
         paramAjax('param_epsilon', 'Double', this.value);
     });
+
+    $('input[type=number][id=param_Alpha]').on('input', function() {
+        paramAjax('param_alpha', 'Double', this.value);
+    });
+
+    $('input[type=number][id=param_Beta]').on('input', function() {
+        paramAjax('param_beta', 'Double', this.value);
+    });
 });
 
 
@@ -209,9 +217,3 @@ function js_format_date(date) {
     millisecond = "" + date.getMilliseconds(); if (millisecond.length == 1) { millisecond = "0" + millisecond; }
     return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second + "." + millisecond;
 }
-
-$('#input_start_time').datetimepicker({
-    showSecond: true,
-    showMillisec: true,
-    timeFormat: 'hh:mm:ss.l'
-});

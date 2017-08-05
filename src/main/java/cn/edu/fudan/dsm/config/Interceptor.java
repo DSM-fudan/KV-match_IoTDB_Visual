@@ -1,13 +1,10 @@
 package cn.edu.fudan.dsm.config;
 
-import cn.edu.fudan.dsm.service.QueryService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 /**
  * Created by dell on 2017/8/1.
@@ -28,6 +25,8 @@ public class Interceptor implements HandlerInterceptor {
 //                modelAndView.addObject("query_Wu", req.getSession().getAttribute("query-Wu"));
             modelAndView.addObject("param_path", req.getSession().getAttribute("query-param_path"));
             modelAndView.addObject("param_epsilon", req.getSession().getAttribute("query-param_epsilon"));
+            modelAndView.addObject("param_alpha", req.getSession().getAttribute("query-param_alpha"));
+            modelAndView.addObject("param_beta", req.getSession().getAttribute("query-param_beta"));
         }
     }
 
@@ -44,6 +43,8 @@ public class Interceptor implements HandlerInterceptor {
 //        request.getSession().setAttribute("param-epsilon", 50.0);
         request.getSession().setAttribute("query-param_epsilon", 50.0);
         request.getSession().setAttribute("query-param_path", "");
+        request.getSession().setAttribute("query-param_alpha", 1.0);
+        request.getSession().setAttribute("query-param_beta", 0.0);
     }
 
 }
