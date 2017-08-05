@@ -1,7 +1,7 @@
 package cn.edu.fudan.dsm.common;
 
 /**
- * Created by dell on 2017/8/2.
+ * @author Jiaye Wu
  */
 public class TimeValue {
 

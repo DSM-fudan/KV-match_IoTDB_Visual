@@ -14,30 +14,42 @@ $('#input_end_time').datetimepicker({
 });
 
 // normalized switch
-$("[name='param_normalized']").bootstrapSwitch();
+$("input[name='param_normalized']").bootstrapSwitch();
+
+$('input[name="param_normalized"]').on('switchChange.bootstrapSwitch', function(event, state) {
+    console.log(this); // DOM element
+    console.log(event); // jQuery event
+    console.log(state); // true | false
+    if (state) {
+        $('#input_alpha_beta').show();
+    } else {
+        $('#input_alpha_beta').hide();
+    }
+
+});
 
 $("#button_query_generate").click(function() {
     $(this).button('loading');
-    queryAjax("#query_generate");
+    queryAjax("query_generate");
 });
 
 $("#button_query_draw").click(function() {
     $(this).button('loading');
-    queryAjax("#query_draw");
+    queryAjax("query_draw");
 });
 
 $("#button_query_offset").click(function() {
     $(this).button('loading');
-    queryAjax("#query_offset");
+    queryAjax("query_offset");
 });
 
 $("#button_query_offset_random").click(function() {
     $(this).button('loading');
-    queryAjax("#query_offset_random");
+    queryAjax("query_offset_random");
 });
 
 function queryAjax(type) {
-    if (type == "#query_draw") {
+    if (type === "query_draw") {
         var queryStr = '', i, chart = $('#container').highcharts();
         for (i = 0; i < chart.series[0].data.length; i++) {
             if (i > 0) queryStr += "|";
@@ -52,22 +64,36 @@ function queryAjax(type) {
             processData: false,
             contentType: false,
             success: function(data) {
-                window.location.href = "result?token=" + data;
+                if (data.indexOf("Error") !== -1) {
+                    $('#message_' + type).html(data);
+                    $('#message_' + type).show();
+                    $('#button_' + type).button('reset');
+                } else {
+                    window.location.href = "result?token=" + data;
+                }
             }
         });
     } else {
         $.ajax({
             type: "POST",
             url: "query",
-            data: $(type).serialize(),
+            data: $('#' + type).serialize(),
             success: function(data) {
-                window.location.href = "result?token=" + data;
+                if (data.indexOf("Error") !== -1) {
+                    $('#message_' + type).html(data);
+                    $('#message_' + type).show();
+                    $('#button_' + type).button('reset');
+                } else {
+                    window.location.href = "result?token=" + data;
+                }
             }
         });
     }
 }
 
 $(function () {
+    $('.alert-danger').hide();
+
     $('#container').highcharts({
         chart: {
             type: 'scatter',

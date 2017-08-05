@@ -12,21 +12,20 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Created by dell on 2017/8/1.
+ * @author Ningting Pan
  */
 @Service
 public class QueryService {
 
+    private final BasicDao basicDao;
+
     @Autowired
-    BasicDao basicDao;
+    public QueryService(BasicDao basicDao) {
+        this.basicDao = basicDao;
+    }
 
     public List<String> getPath() {
         return basicDao.getMetaData();
-    }
-
-    public long getSeriesLength(String path) {
-        if (path == null || path.equals("")) return 0L;
-        return basicDao.getSeriesLength(path);
     }
 
     public List<SimilarityResult> query(KvMatchQueryRequest queryRequest) {

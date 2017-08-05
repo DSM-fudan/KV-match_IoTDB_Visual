@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * Created by dell on 2017/8/1.
+ * @author Ningting Pan
  */
 @SpringBootApplication
 public class Application {
@@ -12,5 +12,4 @@ public class Application {
     public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
         SpringApplication.run(Application.class, args);
     }
-
 }

@@ -71,21 +71,23 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">Normalized</label>
-                                <div class="col-sm-9" style="padding-left:50px;">
-                                    <input type="checkbox" class="form-control" name="param_normalized" id="param_Normalize_switch" th:checked="${param_normalized}">
+                                <label class="col-sm-3 control-label">Normalization</label>
+                                <div class="col-sm-9" style="padding-left: 70px;">
+                                    <input type="checkbox" data-size="small" class="form-control" name="param_normalized" id="param_Normalize_switch" th:checked="${param_normalized}">
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">Alpha</label>
-                                <div class="col-sm-9">
-                                    <input type="number" class="form-control" name="param_alpha" id="param_Alpha" th:value="${param_alpha}">
+                            <div id="input_alpha_beta" th:hidden="${!param_normalized}">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Alpha</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="param_alpha" id="param_Alpha" th:value="${param_alpha}">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">Beta</label>
-                                <div class="col-sm-9">
-                                    <input type="number" class="form-control" name="param_beta" id="param_Beta" th:value="${param_beta}">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Beta</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="param_beta" id="param_Beta" th:value="${param_beta}">
+                                    </div>
                                 </div>
                             </div>
                         </form>
@@ -174,6 +176,7 @@
                 <h4 class="modal-title" id="modal_generate_title">Generate query series randomly</h4>
             </div>
             <div class="modal-body">
+                <div id="message_query_generate" class="alert alert-danger" role="alert"></div>
                 <form id="query_generate" class="form-horizontal">
                     <input type="hidden" name="type" value="generate">
                     <div class="form-group">
@@ -200,6 +203,7 @@
                 <h4 class="modal-title" id="modal_draw_title">Draw query series by yourself</h4>
             </div>
             <div class="modal-body">
+                <div id="message_query_draw" class="alert alert-danger" role="alert"></div>
                 <div id="container"></div>
             </div>
             <div class="modal-footer">
@@ -218,6 +222,7 @@
                 <h4 class="modal-title" id="modal_offset_title">Pick query series from exist ones</h4>
             </div>
             <div class="modal-body">
+                <div id="message_query_offset" class="alert alert-danger" role="alert"></div>
                 <form id="query_offset" class="form-horizontal">
                     <input type="hidden" name="type" value="offset">
                     <div class="form-group">
@@ -232,13 +237,13 @@
                     <div class="form-group">
                         <label for="input_start_time" class="col-sm-2 control-label">Start Time</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" name="startOffset" id="input_start_time" placeholder="start time of query series: yyyy-MM-dd HH:mm:Sec.Millisecond">
+                            <input type="text" class="form-control" name="startOffset" id="input_start_time" placeholder="yyyy-MM-dd HH:mm:ss.SSS" required>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="input_end_time" class="col-sm-2 control-label">End Time</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" name="endOffset" id="input_end_time" placeholder="end time of query series: yyyy-MM-dd HH:mm:Sec.Millisecond">
+                            <input type="text" class="form-control" name="endOffset" id="input_end_time" placeholder="yyyy-MM-dd HH:mm:ss.SSS" required>
                         </div>
                     </div>
                 </form>
@@ -259,6 +264,7 @@
                 <h4 class="modal-title" id="modal_offset_random_title">Choose data offset randomly</h4>
             </div>
             <div class="modal-body">
+                <div id="message_query_offset_random" class="alert alert-danger" role="alert"></div>
                 <form id="query_offset_random" class="form-horizontal">
                     <input type="hidden" name="type" value="offset_random">
                     <div class="form-group">

@@ -1,38 +1,40 @@
 package cn.edu.fudan.dsm.common;
 
 /**
- * Created by dell on 2017/8/2.
+ * @author Ningting Pan
  */
 public class SimilarityResult {
 
-    Long startTime;
-    Long endTime;
-    Double distance;
+    private long startTime;
+
+    private long endTime;
+
+    private double distance;
 
     public SimilarityResult() {
     }
 
-    public Long getStartTime() {
+    public long getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Long startTime) {
+    public void setStartTime(long startTime) {
         this.startTime = startTime;
     }
 
-    public Long getEndTime() {
+    public long getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Long endTime) {
+    public void setEndTime(long endTime) {
         this.endTime = endTime;
     }
 
-    public Double getDistance() {
+    public double getDistance() {
         return distance;
     }
 
-    public void setDistance(Double distance) {
+    public void setDistance(double distance) {
         this.distance = distance;
     }
 

@@ -12,13 +12,17 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- * Created by dell on 2017/8/1.
+ * @author Ningting Pan
  */
 @Controller
 public class MainController {
 
+    private final QueryService queryService;
+
     @Autowired
-    QueryService queryService;
+    public MainController(QueryService queryService) {
+        this.queryService = queryService;
+    }
 
     @RequestMapping("/")
     public ModelAndView index(HttpServletRequest request) {

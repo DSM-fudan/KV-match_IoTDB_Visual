@@ -4,11 +4,11 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by dell on 2017/8/2.
+ * @author Jiaye Wu
  */
 public class Series {
 
-    List<TimeValue> values;
+    private List<TimeValue> values;
 
     public Series(List<TimeValue> values) {
         this.values = values;

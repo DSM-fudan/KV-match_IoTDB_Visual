@@ -5,13 +5,12 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 /**
- * Created by dell on 2017/8/1.
+ * @author Jiaye Wu
  */
 @Configuration
 public class WebConfig extends WebMvcConfigurerAdapter {
 
-    public void addInterceptors(InterceptorRegistry registry){
+    public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new Interceptor()).addPathPatterns("/**");
     }
-
 }

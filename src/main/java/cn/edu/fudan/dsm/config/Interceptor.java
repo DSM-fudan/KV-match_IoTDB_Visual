@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Created by dell on 2017/8/1.
+ * @author Jiaye Wu
  */
 public class Interceptor implements HandlerInterceptor {
 
@@ -45,8 +45,7 @@ public class Interceptor implements HandlerInterceptor {
         request.getSession().setAttribute("query-param_epsilon", 50.0);
         request.getSession().setAttribute("query-param_path", "");
         request.getSession().setAttribute("query-param_normalized", false);
-        request.getSession().setAttribute("query-param_alpha", 1.0);
-        request.getSession().setAttribute("query-param_beta", 0.0);
+        request.getSession().setAttribute("query-param_alpha", 1.2);
+        request.getSession().setAttribute("query-param_beta", 5.0);
     }
-
 }

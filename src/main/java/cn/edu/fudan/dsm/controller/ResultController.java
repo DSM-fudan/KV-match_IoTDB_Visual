@@ -17,15 +17,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by dell on 2017/8/1.
+ * @author Ningting Pan
  */
 @Controller
 public class ResultController {
 
     private static final int MAX_RESULTS_DISPLAY = 100;
 
+    private final QueryService queryService;
+
     @Autowired
-    private QueryService queryService;
+    public ResultController(QueryService queryService) {
+        this.queryService = queryService;
+    }
 
     @SuppressWarnings("unchecked")
     @RequestMapping("/result")
@@ -86,7 +90,7 @@ public class ResultController {
             }
             List<TimeValue> data = queryService.getSeriesSimilar(new Path(path), answers.get(index).getStartTime(), answers.get(index).getEndTime());
             mav.addObject("data", new Series(data));
-            query = alignQandX(query, data);
+            query = alignQAndX(query, data);
 
         } else {
             mav.addObject("cntAnswers", 0);
@@ -109,8 +113,8 @@ public class ResultController {
         return mav;
     }
 
-    // make query and data align in highcharts
-    private List<TimeValue> alignQandX(List<TimeValue> query, List<TimeValue> data) {
+    // make query and data align in Highcharts
+    private List<TimeValue> alignQAndX(List<TimeValue> query, List<TimeValue> data) {
         if (query != null && !query.isEmpty() && data != null && !data.isEmpty()) {
             List<TimeValue> q = new ArrayList<>();
             long qt = query.get(0).getTime();
@@ -125,5 +129,4 @@ public class ResultController {
             return query;
         }
     }
-
 }

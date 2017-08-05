@@ -13,6 +13,7 @@
 
     <!-- Bootstrap core CSS -->
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/bootstrap-switch.css}" rel="stylesheet">
 
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <link th:href="@{/css/ie10-viewport-bug-workaround.css}" rel="stylesheet">
@@ -57,7 +58,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Path</label>
                                 <div class="col-sm-9">
-                                    <select class="form-control" id="param_Path" name="param_path" disabled="disabled">
+                                    <select class="form-control" id="param_Path" name="param_path" disabled>
                                         <option th:if="${'' == param_path}" value="" th:selected="${'' == param_path}">Please choose</option>
                                         <option th:each="a_param_path : ${param_paths}" th:text="${a_param_path}" th:selected="${a_param_path == param_path}"></option>
                                     </select>
@@ -66,25 +67,27 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Error</label>
                                 <div class="col-sm-9">
-                                    <input disabled="disabled" type="number" class="form-control" name="param_epsilon" id="param_Epsilon" placeholder="Distance threshold" th:value="${param_epsilon}">
+                                    <input disabled type="number" class="form-control" name="param_epsilon" id="param_Epsilon" placeholder="Distance threshold" th:value="${param_epsilon}">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">Normalized</label>
-                                <div class="col-sm-9" style="padding-left:50px;">
-                                    <input disabled="disabled" type="checkbox" class="form-control" name="param_normalized" id="param_Normalize_switch" th:checked="${param_normalized}">
+                                <label class="col-sm-3 control-label">Normalization</label>
+                                <div class="col-sm-9" style="padding-left: 70px;">
+                                    <input disabled type="checkbox" data-size="small" class="form-control" name="param_normalized" id="param_Normalize_switch" th:checked="${param_normalized}">
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">Alpha</label>
-                                <div class="col-sm-9">
-                                    <input disabled="disabled" type="number" class="form-control" name="param_alpha" id="param_Alpha" th:value="${param_alpha}">
+                            <div id="input_alpha_beta" th:hidden="${!param_normalized}">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Alpha</label>
+                                    <div class="col-sm-9">
+                                        <input data-disabled="true" disabled type="number" class="form-control" name="param_alpha" id="param_Alpha" th:value="${param_alpha}">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">Beta</label>
-                                <div class="col-sm-9">
-                                    <input disabled="disabled" type="number" class="form-control" name="param_beta" id="param_Beta" th:value="${param_beta}">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Beta</label>
+                                    <div class="col-sm-9">
+                                        <input disabled type="number" class="form-control" name="param_beta" id="param_Beta" th:value="${param_beta}">
+                                    </div>
                                 </div>
                             </div>
                         </form>
@@ -130,21 +133,14 @@
 
                     <a class="list-group-item" th:each="answer,iterationStatus : ${answers}"
                        th:href="@{/result(token=${token},index=${iterationStatus.count-1},unique=${unique})}">
-                        <span th:text="${#dates.format(answer.startTime, 'yyyy-MM-dd H:mm:ss.SSS')}"></span>
+                        <span th:text="${#dates.format(answer.startTime, 'yyyy-MM-dd HH:mm:ss.SSS')}"></span>
                         <span th:text="'#'+${iterationStatus.count}" class="label label-primary rank_label"></span>
                         <br>
-                        <span th:text="${#dates.format(answer.endTime, 'yyyy-MM-dd H:mm:ss.SSS')}"></span>
+                        <span th:text="${#dates.format(answer.endTime, 'yyyy-MM-dd HH:mm:ss.SSS')}"></span>
                         <span class="badge">
                             <span th:text="${#numbers.formatDecimal(answer.distance, 1, 'COMMA', 2, 'POINT')}"></span>
                         </span>
                     </a>
-                    <!--<a class="list-group-item" th:each="answer,iterationStatus : ${answers}"-->
-                       <!--href="javascript:void(0)" onclick="getDataAjax([[token]],[[iterationStatus.count-1]],[[unique]])">-->
-                        <!--<span class="badge">-->
-                            <!--<span th:text="${#numbers.formatDecimal(answer.distance, 1, 'COMMA', 2, 'POINT')}"></span>-->
-                        <!--</span>-->
-                        <!--#<span th:text="${iterationStatus.count}"></span> - <span th:text="${answer.startTime}"></span>-->
-                    <!--</a>-->
                 </div>
             </div>
             <i th:if="${unique && cntAnswers > #lists.size(answers)}"> In order to show you the most relevant results, we have omitted some entries very similar to the
@@ -170,6 +166,7 @@
 <script th:src="@{/js/jquery-ui.js}"></script>
 <script th:src="@{/js/jquery-ui-timepicker-addon.js}"></script>
 <script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/bootstrap-switch.js}"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script th:src="@{/js/ie10-viewport-bug-workaround.js}"></script>
 <script th:src="@{/js/offcanvas.js}"></script>
