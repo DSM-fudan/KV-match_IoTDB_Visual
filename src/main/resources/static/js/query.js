@@ -3,14 +3,14 @@ $('#input_start_time').datetimepicker({
     showSecond: true,
     showMillisec: true,
     dateFormat: 'yy-mm-dd',
-    timeFormat: 'hh:mm:ss.l'
+    timeFormat: 'HH:mm:ss.l'
 });
 
 $('#input_end_time').datetimepicker({
     showSecond: true,
     showMillisec: true,
     dateFormat: 'yy-mm-dd',
-    timeFormat: 'hh:mm:ss.l'
+    timeFormat: 'HH:mm:ss.l'
 });
 
 // normalized switch
