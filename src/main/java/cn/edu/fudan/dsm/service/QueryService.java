@@ -41,4 +41,8 @@ public class QueryService {
         List<SimilarityResult> results = basicDao.queryDraw(query, path, epsilon, alpha, beta);
         return results;
     }
+
+    public String createIndex(String index_path) {
+        return basicDao.createIndex(index_path);
+    }
 }

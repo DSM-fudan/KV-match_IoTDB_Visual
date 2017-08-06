@@ -149,4 +149,22 @@ public class QueryController {
             return "<strong>Error</strong> " + e.getMessage();
         }
     }
+
+    @RequestMapping(value = "createIndex", method = RequestMethod.POST)
+    @ResponseBody
+    public String createIndex(String index_path) {
+        try {
+            String message = queryService.createIndex(index_path);
+            if (message.contains("Error")) {
+                return "<strong>" + message + "</strong>";
+            } else if (message.contains("Warn")) {
+                return "<strong>" + message + "</strong>";
+            } else {
+                return "<strong>" + message + "</strong>";
+            }
+        } catch (Exception e) {
+            return "<strong>Error" + e.getMessage() + "</strong>";
+        }
+    }
+
 }

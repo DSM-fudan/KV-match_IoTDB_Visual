@@ -28,9 +28,9 @@ $('input[name="param_normalized"]').on('switchChange.bootstrapSwitch', function(
 
 });
 
-$("#button_query_generate").click(function() {
+$("#button_index_create").click(function() {
     $(this).button('loading');
-    queryAjax("query_generate");
+    queryAjax("index_create");
 });
 
 $("#button_query_draw").click(function() {
@@ -71,6 +71,24 @@ function queryAjax(type) {
                 } else {
                     window.location.href = "result?token=" + data;
                 }
+            }
+        });
+    } else if (type === "index_create") {
+        $.ajax({
+            type: "POST",
+            url: "createIndex",
+            data: $('#' + type).serialize(),
+            success: function(data) {
+                console.log(data);
+                if (data.indexOf("Success") !== -1) {
+                    $('#message_' + type).addClass("alert alert-success").html(data);
+                } else if (data.indexOf("Warn") !== -1) {
+                    $('#message_' + type).addClass("alert alert-warning").html(data);
+                } else {
+                    $('#message_' + type).addClass("alert alert-danger").html(data);
+                }
+                $('#message_' + type).show();
+                $('#button_' + type).button('reset');
             }
         });
     } else {

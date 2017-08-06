@@ -34,6 +34,7 @@ public class BasicDao {
     private static final String SET_STORAGE_GROUP_SQL = "set storage group to %s";
     private static final String DELETE_TEMP_SERIES_SQL = "delete timeseries %s";
     private static final String INSERT_TEMP_SERIES_SQL = "insert into %s(timestamp,%s) values (%s,%s)"; //device sensor time value
+    private static final String CREATE_INDEX_SQL = "create index on %s using kv-match";
     private static final String PREFIX = "root.tmp";
 
     private final JdbcTemplate jdbcTemplate;
@@ -154,5 +155,21 @@ public class BasicDao {
         List<SimilarityResult> result = getSimilarityResult(queryRequest);
         dropTempSeries(queryRequest.getQueryPath());
         return result;
+    }
+
+    public String createIndex(String index_path) {
+        try {
+            String sql = String.format(CREATE_INDEX_SQL, index_path);
+            logger.info(sql);
+            jdbcTemplate.execute(sql);
+            return "Success: Index created on timeseries " + index_path + ".";
+        } catch (Exception e) {
+            logger.error(e.toString());
+            if (e.toString().contains("has already been indexed")) {
+                return "Warn: Timeseries " + index_path + " has already been indexed.";
+            } else {
+                return "Error: Timeseries " + index_path + " can't be indexed";
+            }
+        }
     }
 }

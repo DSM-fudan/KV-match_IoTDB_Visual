@@ -108,7 +108,7 @@
             </p>
             <div class="jumbotron">
                 <h1>KV-match on IoTDB</h1>
-                <p>This is a system to show the KV-match time series subsequence matching on IoTDB. Try some query series to see the performance.</p>
+                <p>This is a system to show the KV-match timeseries subsequence matching on IoTDB. Try some query series to see the performance.</p>
             </div>
             <div class="row">
                 <div class="col-xs-6 col-lg-4">
@@ -118,12 +118,12 @@
                 </div><!--/.col-xs-6.col-lg-4-->
                 <div class="col-xs-6 col-lg-4">
                     <h2>KV-match</h2>
-                    <p>Similarity-based time-series retrieval has been a subject of long-term study due to its wide usage in many applications, such as financial data analysis, weather data forecasting, and multimedia data retrieval.</p>
+                    <p>Similarity-based timeseries retrieval has been a subject of long-term study due to its wide usage in many applications, such as financial data analysis, weather data forecasting, and multimedia data retrieval.</p>
                     <p><a class="btn btn-default" href="#KV-match" role="button">View details &raquo;</a></p>
                 </div><!--/.col-xs-6.col-lg-4-->
                 <div class="col-xs-6 col-lg-4">
                     <h2>TsFile</h2>
-                    <p>TsFile is a columnar storage file format designed for time series data, which supports efficient compression and query. It is easy to integrate TsFile into your IoT big data processing frameworks.</p>
+                    <p>TsFile is a columnar storage file format designed for timeseries data, which supports efficient compression and query. It is easy to integrate TsFile into your IoT big data processing frameworks.</p>
                     <p><a class="btn btn-default" href="#similarity_search" role="button">View details &raquo;</a></p>
                 </div><!--/.col-xs-6.col-lg-4-->
                 <!--<div class="col-xs-6 col-lg-4">-->
@@ -153,6 +153,7 @@
                     </p>
                 </a>
                 <!--<a href="#" data-toggle="modal" data-target="#modal_generate" class="list-group-item">Generate query series randomly</a>-->
+                <a href="#" data-toggle="modal" data-target="#modal_index" class="list-group-item">Create index on timeseries</a>
                 <a href="#" data-toggle="modal" data-target="#modal_draw" class="list-group-item">Draw query series by yourself</a>
                 <a href="#" data-toggle="modal" data-target="#modal_offset" class="list-group-item">Pick query series from exist ones</a>
                 <!--<a href="#" data-toggle="modal" data-target="#modal_offset_random" class="list-group-item">Choose data offset randomly</a>-->
@@ -168,28 +169,30 @@
 
 </div><!--/.container-->
 
-<div class="modal fade" id="modal_generate" tabindex="-1" role="dialog" aria-labelledby="modal_generate_title">
+<div class="modal fade" id="modal_index" tabindex="-1" role="dialog" aria-labelledby="modal_index_title">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="modal_generate_title">Generate query series randomly</h4>
+                <h4 class="modal-title" id="modal_index_title">Create index on timeseries</h4>
             </div>
             <div class="modal-body">
-                <div id="message_query_generate" class="alert alert-danger" role="alert"></div>
-                <form id="query_generate" class="form-horizontal">
-                    <input type="hidden" name="type" value="generate">
+                <div id="message_index_create" role="alert"></div>
+                <form id="index_create" class="form-horizontal">
                     <div class="form-group">
-                        <label for="input_generate_length" class="col-sm-2 control-label">Length</label>
+                        <label class="col-sm-2 control-label">Path</label>
                         <div class="col-sm-10">
-                            <input type="number" class="form-control" name="length" id="input_generate_length" placeholder="Length of query series" value="512">
+                            <select class="form-control" id="index_path" name="index_path">
+                                <option th:if="${'' == param_path}" value="" th:selected="${'' == param_path}">Please choose</option>
+                                <option th:each="a_param_path : ${param_paths}" th:text="${a_param_path}" th:selected="${a_param_path == index_path}"></option>
+                            </select>
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button id="button_query_generate" type="button" data-loading-text="Processing..." class="btn btn-primary" autocomplete="off">Query</button>
+                <button id="button_index_create" type="button" data-loading-text="Processing..." class="btn btn-primary" autocomplete="off">Create</button>
             </div>
         </div>
     </div>
