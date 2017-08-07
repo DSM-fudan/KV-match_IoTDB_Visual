@@ -136,6 +136,12 @@ public class BasicDao {
             } catch (Exception e) {
                 logger.warn(e.getMessage());
             }
+            try {
+                executeSql("merge");
+                executeSql("close");
+            } catch (Exception e) {
+                logger.warn(e.getMessage());
+            }
             // insert Q values
             long startTime = 0L, endTime = 0L;
             for (int i = 0; i < query.size(); i++) {
