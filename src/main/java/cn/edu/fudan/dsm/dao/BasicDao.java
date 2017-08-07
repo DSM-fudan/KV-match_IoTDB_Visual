@@ -51,10 +51,8 @@ public class BasicDao {
                     DatabaseMetaData databaseMetaData = connection.getMetaData();
                     ResultSet resultSet = databaseMetaData.getColumns(null, null, "root.*", null);
                     List<String> columnsNames = new ArrayList<>();
-                    while (resultSet.next()) {
-//                        if (resultSet.getString("COLUMN_INDEX").equals("true")) {
-                            columnsNames.add(resultSet.getString(0));
-//                        }
+                    while (resultSet.next()) {  // add indexed timeseries only
+                        columnsNames.add(resultSet.getString(0));
                     }
                     return columnsNames;
                 }
@@ -67,7 +65,22 @@ public class BasicDao {
     }
 
     public boolean hasIndex(Path path) {
-        return true;
+        try {
+            ConnectionCallback<Boolean> connectionCallback = new ConnectionCallback<Boolean>() {
+                public Boolean doInConnection(Connection connection) throws SQLException {
+                    DatabaseMetaData databaseMetaData = connection.getMetaData();
+                    ResultSet resultSet = databaseMetaData.getIndexInfo(null, null, path.getFullPath(), false, false);
+                    while (resultSet.next()) {  // add indexed timeseries only
+                        return resultSet.getString("COLUMN_INDEX_EXISTED").equals("true");
+                    }
+                    return false;
+                }
+            };
+            return jdbcTemplate.execute(connectionCallback);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return false;
+        }
     }
 
     public List<SimilarityResult> query(KvMatchQueryRequest queryRequest) {
@@ -112,19 +125,17 @@ public class BasicDao {
         String device = pathStr.replace(".", "");
         String sensor = "t" + String.valueOf(System.currentTimeMillis() % 10000);
         String tmp_series_name = PREFIX + "." + device + "." + sensor; //root.tmp.rootlaptopd1s1.15984293482
-        // create temp table
-        String sql = String.format(CREATE_TEMP_SERIES_SQL, tmp_series_name);
-        logger.info(sql);
         try {
-            jdbcTemplate.execute(sql);
+            // create temp table
+            String sql = String.format(CREATE_TEMP_SERIES_SQL, tmp_series_name);
+            executeSql(sql);
             try {
                 // set storage group
                 sql = String.format(SET_STORAGE_GROUP_SQL, PREFIX);
+                executeSql(sql);
             } catch (Exception e) {
-                // do nothing
+                logger.warn(e.getMessage());
             }
-            logger.info(sql);
-            jdbcTemplate.execute(sql);
             // insert Q values
             long startTime = 0L, endTime = 0L;
             for (int i = 0; i < query.size(); i++) {
@@ -132,13 +143,12 @@ public class BasicDao {
                 if (i == 0) startTime = (long) q.left;
                 else if (i == query.size() - 1) endTime = (long) q.left;
                 sql = String.format(INSERT_TEMP_SERIES_SQL, PREFIX + "." + device, sensor, q.left, q.right);
-                logger.info(sql);
-                jdbcTemplate.execute(sql);
+                executeSql(sql);
             }
             // create index for Q
             return KvMatchQueryRequest.builder(path, new Path(tmp_series_name), startTime, endTime, epsilon).alpha(alpha).beta(beta).build();
         } catch (Exception e) {
-            logger.error(e.toString());
+            logger.error(e.getMessage());
             dropTempSeries(new Path(tmp_series_name));
             return null;
         }
@@ -146,7 +156,7 @@ public class BasicDao {
 
     private void dropTempSeries(Path tmpPath) {
         String sql = String.format(DELETE_TEMP_SERIES_SQL, tmpPath);
-        jdbcTemplate.execute(sql);
+        executeSql(sql);
     }
 
     public List<SimilarityResult> queryDraw(List<Pair<Integer, Double>> query, Path path, double epsilon, double alpha, double beta) {
@@ -157,19 +167,13 @@ public class BasicDao {
         return result;
     }
 
-    public String createIndex(String index_path) {
-        try {
-            String sql = String.format(CREATE_INDEX_SQL, index_path);
-            logger.info(sql);
-            jdbcTemplate.execute(sql);
-            return "Success: Index created on timeseries " + index_path + ".";
-        } catch (Exception e) {
-            logger.error(e.toString());
-            if (e.toString().contains("has already been indexed")) {
-                return "Warn: Timeseries " + index_path + " has already been indexed.";
-            } else {
-                return "Error: Timeseries " + index_path + " can't be indexed";
-            }
-        }
+    public void createIndex(String index_path) {
+        String sql = String.format(CREATE_INDEX_SQL, index_path);
+        executeSql(sql);
+    }
+
+    private void executeSql(String sql) {
+        logger.info(sql);
+        jdbcTemplate.execute(sql);
     }
 }

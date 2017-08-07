@@ -45,6 +45,9 @@ public class QueryController {
         try {
             // get parameters
             String path = (String) request.getSession().getAttribute("query-param_path");
+            if (path == null || path.isEmpty()) {
+                throw new IllegalArgumentException("Which timeseries do you want to query? Please set it in the setting panel.");
+            }
             Double epsilon = (Double) request.getSession().getAttribute("query-param_epsilon");
             Boolean normalized = (Boolean) request.getSession().getAttribute("query-param_normalized");
             Double alpha = (Double) request.getSession().getAttribute("query-param_alpha");
@@ -98,6 +101,9 @@ public class QueryController {
         try {
             // get parameters
             String path = (String) request.getSession().getAttribute("query-param_path");
+            if (path == null || path.isEmpty()) {
+                throw new IllegalArgumentException("Which timeseries do you want to query? Please set it in the setting panel.");
+            }
             Double epsilon = (Double) request.getSession().getAttribute("query-param_epsilon");
             Boolean normalized = (Boolean) request.getSession().getAttribute("query-param_normalized");
             Double alpha = (Double) request.getSession().getAttribute("query-param_alpha");
@@ -154,17 +160,16 @@ public class QueryController {
     @ResponseBody
     public String createIndex(String index_path) {
         try {
-            String message = queryService.createIndex(index_path);
-            if (message.contains("Error")) {
-                return "<strong>" + message + "</strong>";
-            } else if (message.contains("Warn")) {
-                return "<strong>" + message + "</strong>";
-            } else {
-                return "<strong>" + message + "</strong>";
-            }
+            queryService.createIndex(index_path);
+            return "<strong>Success</strong> " + "Index created on timeseries " + index_path + ".";
         } catch (Exception e) {
-            return "<strong>Error" + e.getMessage() + "</strong>";
+            if (e.toString().contains("has already been indexed")) {
+                logger.warn(e.getMessage(), e.getCause());
+                return "<strong>Warning</strong> Timeseries " + index_path + " has already been indexed.";
+            } else {
+                logger.error(e.getMessage(), e.getCause());
+                return "<strong>Error</strong> Timeseries " + index_path + " can't be indexed.";
+            }
         }
     }
-
 }

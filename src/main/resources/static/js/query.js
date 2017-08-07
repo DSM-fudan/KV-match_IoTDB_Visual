@@ -17,15 +17,11 @@ $('#input_end_time').datetimepicker({
 $("input[name='param_normalized']").bootstrapSwitch();
 
 $('input[name="param_normalized"]').on('switchChange.bootstrapSwitch', function(event, state) {
-    console.log(this); // DOM element
-    console.log(event); // jQuery event
-    console.log(state); // true | false
     if (state) {
         $('#input_alpha_beta').show();
     } else {
         $('#input_alpha_beta').hide();
     }
-
 });
 
 $("#button_index_create").click(function() {
@@ -81,11 +77,11 @@ function queryAjax(type) {
             success: function(data) {
                 console.log(data);
                 if (data.indexOf("Success") !== -1) {
-                    $('#message_' + type).addClass("alert alert-success").html(data);
-                } else if (data.indexOf("Warn") !== -1) {
-                    $('#message_' + type).addClass("alert alert-warning").html(data);
+                    $('#message_' + type).removeClass().addClass("alert alert-success").html(data);
+                } else if (data.indexOf("Warning") !== -1) {
+                    $('#message_' + type).removeClass().addClass("alert alert-warning").html(data);
                 } else {
-                    $('#message_' + type).addClass("alert alert-danger").html(data);
+                    $('#message_' + type).removeClass().addClass("alert alert-danger").html(data);
                 }
                 $('#message_' + type).show();
                 $('#button_' + type).button('reset');

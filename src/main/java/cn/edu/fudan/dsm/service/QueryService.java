@@ -29,8 +29,7 @@ public class QueryService {
     }
 
     public List<SimilarityResult> query(KvMatchQueryRequest queryRequest) {
-        List<SimilarityResult> results = basicDao.query(queryRequest);
-        return results;
+        return basicDao.query(queryRequest);
     }
 
     public List<TimeValue> getSeriesSimilar(Path path, Long startTime, Long endTime) {
@@ -38,11 +37,10 @@ public class QueryService {
     }
 
     public List<SimilarityResult> queryDraw(List<Pair<Integer, Double>> query, Path path, Double epsilon, Double alpha, Double beta) {
-        List<SimilarityResult> results = basicDao.queryDraw(query, path, epsilon, alpha, beta);
-        return results;
+        return basicDao.queryDraw(query, path, epsilon, alpha, beta);
     }
 
-    public String createIndex(String index_path) {
-        return basicDao.createIndex(index_path);
+    public void createIndex(String index_path) {
+        basicDao.createIndex(index_path);
     }
 }
