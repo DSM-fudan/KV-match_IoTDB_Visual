@@ -1,6 +1,6 @@
-package cn.edu.fudan.dsm.controller;
+package cn.edu.fudan.dsm.kvmatch.iotdb.visual.controller;
 
-import cn.edu.fudan.dsm.service.QueryService;
+import cn.edu.fudan.dsm.kvmatch.iotdb.visual.service.QueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

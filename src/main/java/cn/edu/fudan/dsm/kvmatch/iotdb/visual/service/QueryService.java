@@ -1,11 +1,11 @@
-package cn.edu.fudan.dsm.service;
+package cn.edu.fudan.dsm.kvmatch.iotdb.visual.service;
 
-import cn.edu.fudan.dsm.common.SimilarityResult;
-import cn.edu.fudan.dsm.common.TimeValue;
-import cn.edu.fudan.dsm.dao.BasicDao;
-import cn.edu.thu.tsfile.common.utils.Pair;
-import cn.edu.thu.tsfile.timeseries.read.qp.Path;
-import cn.edu.thu.tsfiledb.index.kvmatch.KvMatchQueryRequest;
+import cn.edu.fudan.dsm.kvmatch.iotdb.visual.common.SimilarityResult;
+import cn.edu.fudan.dsm.kvmatch.iotdb.visual.common.TimeValue;
+import cn.edu.fudan.dsm.kvmatch.iotdb.visual.dao.BasicDao;
+import cn.edu.tsinghua.iotdb.index.kvmatch.KvMatchQueryRequest;
+import cn.edu.tsinghua.tsfile.common.utils.Pair;
+import cn.edu.tsinghua.tsfile.timeseries.read.support.Path;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

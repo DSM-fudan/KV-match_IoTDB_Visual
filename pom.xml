@@ -5,12 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>cn.edu.fudan.dsm</groupId>
-    <artifactId>kvmatch-tsfiledb-visual</artifactId>
+    <artifactId>kvmatch-iotdb-visual</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>kvmatch-tsfiledb-visual</name>
-    <description>Demo for similarity query</description>
+    <name>kvmatch-iotdb-visual</name>
+    <description>Demo for similarity query on IoTDB</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -81,9 +81,9 @@
         <!--</dependency>-->
 
         <dependency>
-            <groupId>cn.edu.thu</groupId>
-            <artifactId>tsfiledb</artifactId>
-            <version>0.0.1</version>
+            <groupId>cn.edu.tsinghua</groupId>
+            <artifactId>IoTDB</artifactId>
+            <version>0.5.0-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>ch.qos.logback</groupId>

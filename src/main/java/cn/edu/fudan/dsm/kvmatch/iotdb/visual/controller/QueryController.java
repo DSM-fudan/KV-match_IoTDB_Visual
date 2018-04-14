@@ -1,11 +1,11 @@
-package cn.edu.fudan.dsm.controller;
+package cn.edu.fudan.dsm.kvmatch.iotdb.visual.controller;
 
-import cn.edu.fudan.dsm.common.SimilarityResult;
-import cn.edu.fudan.dsm.common.TimeValue;
-import cn.edu.fudan.dsm.service.QueryService;
-import cn.edu.thu.tsfile.common.utils.Pair;
-import cn.edu.thu.tsfile.timeseries.read.qp.Path;
-import cn.edu.thu.tsfiledb.index.kvmatch.KvMatchQueryRequest;
+import cn.edu.fudan.dsm.kvmatch.iotdb.visual.common.SimilarityResult;
+import cn.edu.fudan.dsm.kvmatch.iotdb.visual.common.TimeValue;
+import cn.edu.fudan.dsm.kvmatch.iotdb.visual.service.QueryService;
+import cn.edu.tsinghua.iotdb.index.kvmatch.KvMatchQueryRequest;
+import cn.edu.tsinghua.tsfile.common.utils.Pair;
+import cn.edu.tsinghua.tsfile.timeseries.read.support.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,7 +40,7 @@ public class QueryController {
 
     @RequestMapping(value = "/query", method = RequestMethod.POST)
     @ResponseBody
-    public String queryGenerateOrOffset(String Q_query_Path, String startOffset, String endOffset, HttpServletRequest request) throws IOException, ParseException {
+    public String queryGenerateOrOffset(String Q_query_Path, String startOffset, String endOffset, HttpServletRequest request) {
         try {
             // get parameters
             String path = (String) request.getSession().getAttribute("query-param_path");
@@ -97,7 +96,7 @@ public class QueryController {
 
     @RequestMapping(value = "/queryDraw", method = RequestMethod.POST)
     @ResponseBody
-    public String queryDraw(@RequestParam String queryStr, HttpServletRequest request) throws IOException {
+    public String queryDraw(@RequestParam String queryStr, HttpServletRequest request) {
         try {
             // get parameters
             String path = (String) request.getSession().getAttribute("query-param_path");

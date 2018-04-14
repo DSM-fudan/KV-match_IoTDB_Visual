@@ -1,4 +1,4 @@
-package cn.edu.fudan.dsm.config;
+package cn.edu.fudan.dsm.kvmatch.iotdb.visual.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

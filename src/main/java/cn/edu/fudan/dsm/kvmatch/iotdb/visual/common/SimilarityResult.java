@@ -1,4 +1,4 @@
-package cn.edu.fudan.dsm.common;
+package cn.edu.fudan.dsm.kvmatch.iotdb.visual.common;
 
 /**
  * @author Ningting Pan

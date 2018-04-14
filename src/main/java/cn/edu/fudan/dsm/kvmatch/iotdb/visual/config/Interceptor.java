@@ -1,4 +1,4 @@
-package cn.edu.fudan.dsm.config;
+package cn.edu.fudan.dsm.kvmatch.iotdb.visual.config;
 
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
